@@ -1,11 +1,20 @@
 ---
-title: "DSProject1"
+title: "Abigail Krenz"
+image: WebsiteImage.jpeg
+toc: false
+about: 
+  template: solar
+  image-shape: round
+  image-width: 17em
+  links:
+    - text: LinkedIn
+      href: https://www.linkedin.com/in/abigail-krenz-58b200217/
+    - text: GitHub
+      href: https://github.com/abigailkrenz28/DSProject1
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+Hello there! I study international relations and Middle Eastern studies at Pomona College.
 
 ```{r}
-1 + 1
+
 ```

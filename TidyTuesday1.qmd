@@ -1,0 +1,15 @@
+---
+title: "TidyTuesday1"
+format: html
+---
+
+```{r}
+library(tidyverse)
+
+tuesdata <- tidytuesdayR::tt_load('2025-08-05')
+income_inequality_processed <- tuesdata$income_inequality_processed
+income_inequality_raw <- tuesdata$income_inequality_raw
+
+ggplot(data=income_inequality_processed, aes(x=Year, y=gini_mi_eq, color=Entity)) + geom_line() + labs(title="Inequality in countries across time", x="Year", y="Gini Index", color="Country")
+```
+

@@ -1,0 +1,22 @@
+---
+title: "TidyTuesday2"
+format: html
+---
+
+```{r}
+tuesdata <- tidytuesdayR::tt_load('2025-02-25')
+article_dat <- tuesdata$article_dat
+model_dat <- tuesdata$model_dat
+
+race_language <- article_dat |>
+  select(study_year_end, race1, race2, race3, race4, race5, race6, race7, race8) |>
+  pivot_longer(cols = race1:race8, names_to = "RaceNumber", values_to = "race") |>
+  group_by(study_year_end, race) |>
+  summarize(count=n()) |>
+  filter(is.na(race) == FALSE)
+  
+View(race_language)
+
+
+```
+

@@ -1,21 +1,25 @@
 project:
   type: website
+  output-dir: docs
 
 website:
-  title: "DSProject1"
+  title: "Abigail Krenz"
   navbar:
     left:
-      - href: index.qmd
-        text: Home
-      - about.qmd
-
+      - text: Home
+        href: index.qmd
+      - text: About
+        href: about.qmd
+      - text: Data Viz
+        menu:
+          - text: Tidy Tuesday 1
+            href: TidyTuesday1.qmd
+          - text: Tidy Tuesday 2
+            href: TidyTuesday2.qmd
 format:
   html:
-    theme:
-      - cosmo
-      - brand
+    theme: solar
     css: styles.css
     toc: true
-
-editor: visual
+    page-layout: full
 
