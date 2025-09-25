@@ -2,8 +2,8 @@
 title: "Abigail Krenz"
 image: WebsiteImage.jpeg
 toc: false
-about: 
-  theme: jolla
+about:
+  template: jolla
   image-shape: round
   image-width: 17em
   links:

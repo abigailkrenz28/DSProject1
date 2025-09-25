@@ -5,10 +5,10 @@ project:
 website:
   title: "Abigail Krenz"
   navbar:
-    right: 
-      - text: "Home"
+    left:
+      - text: Home
         href: index.qmd
-      - text: "Data Viz"
+      - text: Data Viz
         menu: 
           - text: Tidy Tuesday 1
             href: TidyTuesday1.qmd
@@ -17,8 +17,7 @@ website:
 
 format:
   html:
-    template: jolla
+    theme: jolla
     css: styles.css
     toc: true
     page-layout: full
-

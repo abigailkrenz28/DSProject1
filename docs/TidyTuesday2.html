@@ -8,9 +8,9 @@
 
 <meta name="author" content="Abigail Krenz">
 <meta name="dcterms.date" content="2025-09-24">
-<meta name="description" content="Analysis of the number of times racial categories were mentioned in medical journal articles over time">
+<meta name="description" content="Analysis of the number of times racial categories were mentioned in leading ob-gyn journal articles on health disparities over time">
 
-<title>Race in medical studies over time – Abigail Krenz</title>
+<title>Race in obgyn studies – Abigail Krenz</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -72,10 +72,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b53751a350365c71b6c909e95f209ed1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-97e8118aa17df01863e4d4c59f1f926f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-79108a0fc1995748cbd19a5b0e3e3e7c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -129,10 +129,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
-<span class="menu-text">About</span></a>
-  </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-data-viz" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Data Viz</span>
@@ -167,12 +163,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Race in medical studies over time</h1>
+<h1 class="title">Race in obgyn studies</h1>
 </div>
 
 <div>
   <div class="description">
-    <p>Analysis of the number of times racial categories were mentioned in medical journal articles over time</p>
+    <p>Analysis of the number of times racial categories were mentioned in leading ob-gyn journal articles on health disparities over time</p>
   </div>
 </div>
 
@@ -201,10 +197,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<p>Link to data: https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-02-25/readme.md</p>
+<p>Original data source: Lewis, Ayodele G. et al.&nbsp;“Racial and ethnic disparities in reproductive medicine in the United States: a narrative review of contemporary high-quality evidence” American Journal of Obstetrics &amp; Gynecology, Volume 232, Issue 1, 82 - 91.e44.</p>
 <p>About my analysis</p>
-<p>Link to data: https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-08-05/readme.md</p>
-<p>Original data source: World Bank Poverty and Inequality Platform (2025), as compiled in OurWorldinData.org/economic-inequality</p>
-<p>Using a data set of medical studies and their contents, I hoped to visualize how the language used to describe racial categories in medical studies had changed over time. The first two graphs are examples of poor data visualization. The first graph has undifferentiated black lines illustrating how many times a certain term for a racial category was used. It is not easy to see that the vast majority of terms were not used at all for most years, and we can’t identify which line refers to which term. The second graph assigned color to each term but because there were so many categories, the lengend obsures the entire graph.</p>
+<p>This data set compiled articles on racial/ethnic health disparaties from the 8 highest impact ob/gyn journals. I hoped to visualize how the language used to describe racial categories in these medical studies had changed over time. The first two graphs are examples of poor data visualization. The first graph has undifferentiated black lines illustrating how many times a certain term for a racial category was used. It is not easy to see that the vast majority of terms were not used at all for most years, and we can’t identify which line refers to which term. The second graph assigned color to each term but because there were so many categories, the legend obsures the entire graph.</p>
 <p>So, in the third graph, I chose to filter out all racial categories except for white, Black, Asian, and Pacific Islander to see if I could discern a pattern. Although this graph sacrifices a lot of information, it clearly shows that white and Black populations have been studied more extensively than Asian Americans and Pacific Islanders have, at least in a disagreggated way.</p>
 <hr>
 <div class="cell">
@@ -248,7 +244,7 @@ the `.groups` argument.</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> race_language, <span class="fu">aes</span>(<span class="at">x=</span>study_year_end, <span class="at">y=</span>count, <span class="at">group=</span>race)) <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Racial groups mentioned in medical studies over time (without color)"</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Racial groups mentioned in ob-gyn studies over time (without color)"</span>,</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Year"</span>,</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of mentions"</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -261,7 +257,7 @@ the `.groups` argument.</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> race_language, <span class="fu">aes</span>(<span class="at">x=</span>study_year_end, <span class="at">y=</span>count, <span class="at">color=</span>race)) <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Racial groups mentioned in medical studies (with color)"</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Racial groups mentioned in ob-gyn studies (with color)"</span>,</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Year"</span>,</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of mentions"</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -304,7 +300,7 @@ the `.groups` argument.</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> race_language, <span class="fu">aes</span>(<span class="at">x=</span>study_year_end, <span class="at">y=</span>count, <span class="at">color=</span>race)) <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Racial groups mentioned in medical studies (including only certain racial groups)"</span>,</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Racial groups mentioned in oby-gyn studies (including only certain racial groups)"</span>,</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Year"</span>,</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of mentions"</span></span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
