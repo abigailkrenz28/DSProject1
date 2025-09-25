@@ -1,6 +1,20 @@
 ---
-title: "TidyTuesday1"
+title: "Inequality across countries"
+description: |
+  Analysis of the gini coefficients of 52 countries over time
+author: Abigail Krenz
+date: September 24, 2025
 format: html
+---
+
+Link to data: https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-08-05/readme.md
+
+Original data source: Joe Hasell, Bertha Rohenkohl, Pablo Arriagada, Esteban Ortiz-Ospina, and Max Roser (2023) - “Economic Inequality” Published online at OurWorldinData.org. Retrieved from: 'https://ourworldindata.org/economic-inequality' [Online Resource]
+
+About my analysis:
+
+Using a data set from the World Bank of the gini coefficients of 52 countries over the last few decades, I hoped to visualize inequality across these countries over time. South Africa has historically been by far the most unequal country, as measured by the gini coefficient.
+
 ---
 
 ```{r}
@@ -13,3 +27,5 @@ income_inequality_raw <- tuesdata$income_inequality_raw
 ggplot(data=income_inequality_processed, aes(x=Year, y=gini_mi_eq, color=Entity)) + geom_line() + labs(title="Inequality in countries across time", x="Year", y="Gini Index", color="Country")
 ```
 
+```{}
+```

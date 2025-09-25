@@ -5,20 +5,19 @@ project:
 website:
   title: "Abigail Krenz"
   navbar:
-    left:
-      - text: Home
+    right: 
+      - text: "Home"
         href: index.qmd
-      - text: About
-        href: about.qmd
-      - text: Data Viz
-        menu:
+      - text: "Data Viz"
+        menu: 
           - text: Tidy Tuesday 1
             href: TidyTuesday1.qmd
           - text: Tidy Tuesday 2
             href: TidyTuesday2.qmd
+
 format:
   html:
-    theme: solar
+    template: jolla
     css: styles.css
     toc: true
     page-layout: full

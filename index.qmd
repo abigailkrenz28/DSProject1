@@ -3,7 +3,7 @@ title: "Abigail Krenz"
 image: WebsiteImage.jpeg
 toc: false
 about: 
-  template: solar
+  theme: jolla
   image-shape: round
   image-width: 17em
   links:
@@ -15,6 +15,5 @@ about:
 
 Hello there! I study international relations and Middle Eastern studies at Pomona College.
 
-```{r}
-
+```{}
 ```

@@ -1,9 +1,26 @@
 ---
-title: "TidyTuesday2"
+title: "Race in medical studies over time"
+description: |
+  Analysis of the number of times racial categories were mentioned in medical journal articles over time
+author: Abigail Krenz
+date: September 24, 2025
 format: html
 ---
 
+About my analysis
+
+Link to data: https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-08-05/readme.md
+
+Original data source: World Bank Poverty and Inequality Platform (2025), as compiled in OurWorldinData.org/economic-inequality
+  
+Using a data set of medical studies and their contents, I hoped to visualize how the language used to describe racial categories in medical studies had changed over time. The first two graphs are examples of poor data visualization. The first graph has undifferentiated black lines illustrating how many times a certain term for a racial category was used. It is not easy to see that the vast majority of terms were not used at all for most years, and we can't identify which line refers to which term. The second graph assigned color to each term but because there were so many categories, the lengend obsures the entire graph. 
+  
+So, in the third graph, I chose to filter out all racial categories except for white, Black, Asian, and Pacific Islander to see if I could discern a pattern. Although this graph sacrifices a lot of information, it clearly shows that white and Black populations have been studied more extensively than Asian Americans and Pacific Islanders have, at least in a disagreggated way.
+---
+
 ```{r}
+library(tidyverse)
+
 tuesdata <- tidytuesdayR::tt_load('2025-02-25')
 article_dat <- tuesdata$article_dat
 model_dat <- tuesdata$model_dat
@@ -13,10 +30,46 @@ race_language <- article_dat |>
   pivot_longer(cols = race1:race8, names_to = "RaceNumber", values_to = "race") |>
   group_by(study_year_end, race) |>
   summarize(count=n()) |>
-  filter(is.na(race) == FALSE)
+  filter(is.na(race) == FALSE) |>
+  filter(study_year_end!=-99)
   
-View(race_language)
+ggplot(data = race_language, aes(x=study_year_end, y=count, group=race)) + geom_line() +
+  labs(
+    title = "Racial groups mentioned in medical studies over time (without color)",
+    x = "Year",
+    y = "Number of mentions"
+  ) 
+
+ggplot(data = race_language, aes(x=study_year_end, y=count, color=race)) + geom_line() +
+  labs(
+    title = "Racial groups mentioned in medical studies (with color)",
+    x = "Year",
+    y = "Number of mentions"
+  ) 
 
 
 ```
 
+```{r}
+library(tidyverse)
+
+tuesdata <- tidytuesdayR::tt_load('2025-02-25')
+article_dat <- tuesdata$article_dat
+model_dat <- tuesdata$model_dat
+
+race_language <- article_dat |>
+  select(study_year_end, race1, race2, race3, race4, race5, race6, race7, race8) |>
+  pivot_longer(cols = race1:race8, names_to = "RaceNumber", values_to = "race") |>
+  group_by(study_year_end, race) |>
+  summarize(count=n()) |>
+  filter(is.na(race) == FALSE) |>
+  filter(study_year_end!=-99) |>
+  filter(race == "White" | race == "Black" | race == "Pacific Islander" | race == "Asian American")
+
+ggplot(data = race_language, aes(x=study_year_end, y=count, color=race)) + geom_line() +
+  labs(
+    title = "Racial groups mentioned in medical studies (including only certain racial groups)",
+    x = "Year",
+    y = "Number of mentions"
+  ) 
+```

@@ -6,8 +6,11 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Abigail Krenz">
+<meta name="dcterms.date" content="2025-09-24">
+<meta name="description" content="Analysis of the gini coefficients of 52 countries over time">
 
-<title>TidyTuesday1 – Abigail Krenz</title>
+<title>Inequality across countries – Abigail Krenz</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -164,14 +167,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">TidyTuesday1</h1>
+<h1 class="title">Inequality across countries</h1>
 </div>
 
+<div>
+  <div class="description">
+    <p>Analysis of the gini coefficients of 52 countries over time</p>
+  </div>
+</div>
 
 
 <div class="quarto-title-meta column-page">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Abigail Krenz </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 24, 2025</p>
+    </div>
+  </div>
   
     
   </div>
@@ -181,6 +201,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<p>Link to data: https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-08-05/readme.md</p>
+<p>Original data source: Joe Hasell, Bertha Rohenkohl, Pablo Arriagada, Esteban Ortiz-Ospina, and Max Roser (2023) - “Economic Inequality” Published online at OurWorldinData.org. Retrieved from: ‘https://ourworldindata.org/economic-inequality’ [Online Resource]</p>
+<p>About my analysis:</p>
+<p>Using a data set from the World Bank of the gini coefficients of 52 countries over the last few decades, I hoped to visualize inequality across these countries over time. South Africa has historically been by far the most unequal country, as measured by the gini coefficient.</p>
+<hr>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -222,6 +247,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<pre><code></code></pre>
 
 
 
