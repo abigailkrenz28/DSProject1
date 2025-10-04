@@ -1,0 +1,82 @@
+---
+title: "FLOTUS Tweets"
+description: |
+  Analysis of Michelle Obama's Tweet Language
+author: Abigail Krenz
+date: October 4, 2025
+format: html
+---
+
+Data source: “Archived White House Websites and Social Media.” n.d. Barack Obama Presidential Library. Accessed October 4, 2025. https://www.obamalibrary.gov/digital-research-room/archived-white-house-websites-and-social-media.
+
+About my analysis
+
+```{r}
+library(tidyverse)
+library(lubridate)
+
+FlotusTweets <- read.csv("tweets.csv")
+
+FlotusHashtags <- FlotusTweets|>
+  select(tweet_id, text) |>
+  mutate(hashtags = str_extract_all(text, "(?<=#)\\w+"))
+
+HashtagsUnnested <- FlotusHashtags |>
+  unnest(hashtags)
+
+HashtagCounts <- HashtagsUnnested |>
+  count(hashtags, sort = TRUE) |>
+  arrange(desc(n)) |>
+  head(10) |>
+  mutate(hashtags = fct_reorder(hashtags, n))
+
+ggplot(data=HashtagCounts, aes(y=hashtags, x=n, fill=hashtags)) +
+  scale_fill_manual(values = c(rep("grey", 9), "pink")) +
+  geom_col(show.legend = FALSE) + 
+  labs(title = "Michelle Obama's Top 10 Hashtags", y="Hashtag", x="Number of uses")
+
+```
+
+```{r}
+FlotusRetweets <- FlotusTweets|>
+  select(tweet_id, timestamp, text) |>
+  mutate(retweets = str_extract_all(text, "(?<=RT @)\\w+"))
+
+RetweetsUnnested <- FlotusRetweets |>
+  unnest(retweets)
+
+RetweetCounts <- RetweetsUnnested |>
+  count(retweets, sort = TRUE) |>
+  arrange(desc(n)) |>
+  head(10) |>
+  mutate(retweets = fct_reorder(retweets, n))
+
+ggplot(data=RetweetCounts, aes(y=retweets, x=n, fill=retweets)) +
+  scale_fill_manual(values = c(rep("grey", 9), "light blue")) +
+  geom_col(show.legend = FALSE) + 
+  labs(title = "Michelle Obama's Top 10 Accounts for Retweets", y="Accounts", x="Number of retweets")
+```
+```{r}
+FlotusTopics <- FlotusTweets|>
+  select(tweet_id, timestamp, text) |>
+  mutate(girl = str_detect(text, "girl")) |>
+  mutate(education = str_detect(text, "education")) |>
+  mutate(health = str_detect(text, "health")) |>
+  mutate(year = year(timestamp))
+  
+View(FlotusTopics)
+
+  # group_by(year) |>
+  # summarize(education_count = n(education))|>
+  # summarize(girl_count = n(girl)) |>
+  # summarize(health_count = n(health))
+
+# ggplot(data=FlotusTopics, aes(y=retweets, x=year, fill=retweets)) +
+#   scale_fill_manual(values = c(rep("grey", 9), "light blue")) +
+#   geom_col(show.legend = FALSE) + 
+#   labs(title = "Michelle Obama's Top 10 Accounts for Retweets", y="Accounts", x="Number of retweets")
+```
+```
+
+
+
