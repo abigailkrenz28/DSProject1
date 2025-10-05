@@ -1,17 +1,20 @@
 ---
 title: "FLOTUS Tweets"
 description: |
-  Analysis of Michelle Obama's Tweet Language
+  An Analysis of Michelle Obama's Twitter Usage from 2013 to 2016
 author: Abigail Krenz
 date: October 4, 2025
-format: html
+format: 
+  html:
+    code-fold: true
+    code-summary: "Show the code"
 ---
 
-Data source: “Archived White House Websites and Social Media.” n.d. Barack Obama Presidential Library. Accessed October 4, 2025. https://www.obamalibrary.gov/digital-research-room/archived-white-house-websites-and-social-media.
+Data source: “Archived White House Websites and Social Media.” 2017. Barack Obama Presidential Library. Accessed October 4, 2025. [https://www.obamalibrary.gov/digital-research-room/archived-white-house-websites-and-social-media](https://www.obamalibrary.gov/digital-research-room/archived-white-house-websites-and-social-media).
 
-About my analysis
+I analyzed data on Michelle Obama's tweets from 2013 to 2016 to answer three questions: 1) What were her ten most common hashtags and how many times did she use them? 2) From which ten accounts did she retweet most frequently and how many times did she retweet for each? 3) How did her usage of words central to her policy platform—girls, health, and education—change from year to year?
 
-```{r}
+```{r dataviz1, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(lubridate)
 
@@ -36,11 +39,15 @@ ggplot(data=HashtagCounts, aes(y=hashtags, x=n, fill=hashtags)) +
   labs(title = "Michelle Obama's Top 10 Hashtags", y="Hashtag", x="Number of uses")
 
 ```
+As you can see from the graph above, Michelle Obama's most commonly used hashtag was #LetGirlsLearn, followed by #ReachHigher, #GimmeFive, #62MillionGirls, and #LetsMove. Although her use of hashtags likely does not map on perfectly to her priorities, it provides some indication of the social media campaigns she was promoting most actively. 
 
-```{r}
+
+
+```{r dataviz2, warning=FALSE, message=FALSE}
 FlotusRetweets <- FlotusTweets|>
   select(tweet_id, timestamp, text) |>
-  mutate(retweets = str_extract_all(text, "(?<=RT @)\\w+"))
+  mutate(retweets = str_extract(text, "(?<=RT @)\\w+")) |>
+  filter(!is.na(retweets))
 
 RetweetsUnnested <- FlotusRetweets |>
   unnest(retweets)
@@ -56,27 +63,26 @@ ggplot(data=RetweetCounts, aes(y=retweets, x=n, fill=retweets)) +
   geom_col(show.legend = FALSE) + 
   labs(title = "Michelle Obama's Top 10 Accounts for Retweets", y="Accounts", x="Number of retweets")
 ```
-```{r}
+Michelle Obama retweeted from a number of accounts, especially the Let's Move Campaign, the White House, the Joining Forces Campaign (an initiative with Jill Biden to support veterans), and the Reach Higher Campaign (for educational access). Clearly, she was promoting a variety of initiatives relevant to her platform as first lady.
+
+
+```{r dataviz3, warning=FALSE, message=FALSE}
 FlotusTopics <- FlotusTweets|>
   select(tweet_id, timestamp, text) |>
-  mutate(girl = str_detect(text, "girl")) |>
+  mutate(girls = str_detect(text, "girls*")) |>
   mutate(education = str_detect(text, "education")) |>
   mutate(health = str_detect(text, "health")) |>
-  mutate(year = year(timestamp))
-  
-View(FlotusTopics)
+  mutate(year = year(timestamp)) |>
+  select(year, girls, education, health) |>
+  group_by(year)|>
+  summarize(across(c(girls, education, health), sum)) |>
+  pivot_longer(-year, names_to="Topics", values_to="mentions")
 
-  # group_by(year) |>
-  # summarize(education_count = n(education))|>
-  # summarize(girl_count = n(girl)) |>
-  # summarize(health_count = n(health))
-
-# ggplot(data=FlotusTopics, aes(y=retweets, x=year, fill=retweets)) +
-#   scale_fill_manual(values = c(rep("grey", 9), "light blue")) +
-#   geom_col(show.legend = FALSE) + 
-#   labs(title = "Michelle Obama's Top 10 Accounts for Retweets", y="Accounts", x="Number of retweets")
-```
+ggplot(data=FlotusTopics, aes(y=mentions, x=year, color=Topics)) +
+   geom_line() + 
+   labs(title = "Michelle Obama's Tweets on Girls, Education, and Health over Time", y="Tweets", x="Year")
 ```
 
+Michelle Obama used her platform as First Lady to promote education, health, and opportunities for girls. I wanted to understand how her usage of these terms on Twitter changed over the course of her time in the White House. Although her total amount of tweets across all three terms increased from 2013 to 2014 and from 2014 to 2015, her usage of the term girl spiked particularly dramatically in 2015. She used all three terms less frequently in 2016. 
 
 
