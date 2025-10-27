@@ -1,0 +1,67 @@
+---
+title: "Gender Representation in the US Congress"
+description: |
+  A simulation to determine whether the disparity in female representation in the US Congress across the Democratic and Republican Parties is due to chance
+author: Abigail Krenz
+date: October 27, 2025
+format: 
+  html:
+    code-fold: true
+    code-summary: "Show the code"
+---
+
+Data source: Zachary Kornbluth. 2025. Unitedstates/Congress-Legislators. Python. September 27, Released October 22, 2025. [https://github.com/unitedstates/congress-legislators](https://github.com/unitedstates/congress-legislators).
+
+
+There are currently 151 female members in the US Congress, out of 535 voting members. The distribution of women across parties is uneven: 112 are part of the Democratic Party, and the other 43 are part of the Republican Party. Assuming that women are equally likely to be a part of each party, how likely is it that number of Democratic women is 112 are more? How likely is it that different levels of female representation is related to the party rather than random chance?
+
+To answer these questions, I first wrangled data on the current members of Congress to calculate the numbers of men and women in each of the two main parties. Next, I created a data frame with the same numbers of Democrats, Republicans, women, and men, and then created a function that randomly assigns parties to the men and women in the data frame and then calculates the total number of Democratic women. Finally, I ran this function 5000 times using the map_dbl function and then calculated the number of times that Democratic women exceeded 112 divided by the number of iterations (5000). This figure denotes the probability that the number of Democratic women reached or exceeded 112 when the assignment of women to each party was random.
+
+```{r dataviz1, warning=FALSE, message=FALSE}
+library(reprex)
+set.seed(47)
+
+library(tidyverse)
+library(readr)
+url <- "https://raw.githubusercontent.com/unitedstates/congress-legislators/gh-pages/legislators-current.csv"
+current_legislators <- read_csv(url)
+
+rep_and_dem_women <- current_legislators |> 
+  group_by(party, gender) |>
+  summarize(count = n(), .groups = "drop") |>
+  group_by(party) |>
+  mutate(proportion_gender_by_party = count/sum(count)) |>
+  filter(party == "Democrat" | party == "Republican")
+
+start_data <- data.frame(gender = c(rep("F", 155), rep("M", 381)),
+                         party = c(rep("Democrat", 261), rep("Republican", 275)))
+
+random_female_democrats <- function(rep) {
+  start_data |> mutate(perm_party = sample(party)) |>
+    #select(gender, perm_party) |>
+    group_by(gender, perm_party) |>
+    summarize(count = n(), .groups = "drop") |>
+    filter(perm_party == "Democrat", gender == "F") |>
+    select(count) |>
+    pull()
+}
+
+num_exper <- 5000
+female_democrats <- map_dbl(1:num_exper, random_female_democrats)
+
+sum(female_democrats >= 112) / num_exper
+
+
+female_democrats |>
+   data.frame() |>
+   ggplot(aes(x = female_democrats)) +
+   geom_histogram() +
+   geom_vline(xintercept = 112, color = "red") +
+   labs(x = "Number of women in Democratic seats in Congress",
+        title = "Numbers of Democratic women when party assignments are random",
+        subtitle = "Higher female representation in the Democratic party is unlikely due to random chance.")
+```
+As you can see from the chart, the actual number of Democratic women in congressional seats far exceeds the number of women in Democratic seats when the assignment of party to women and men is random. As expected, the random distribution of Democratic women centers around 77.5, or half the total women in Congress.
+
+I calculated that when women are randomly assigned to Democratic and Republican seats 5000 times, the probability that 112 or more were in the Democratic Party was 0. This result suggests the higher number of women in the Democratic Party, in comparison to the Republican Party, has something to do with the parties and not random chance. Future research should determine the specific mechanisms facilitating greater female participation in the Democratic Party.
+
