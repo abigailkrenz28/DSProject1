@@ -18,6 +18,8 @@ website:
             href: Project2.qmd
           - text: Project 3
             href: Project3.qmd
+          - text: Project 4
+            href: Project4.qmd
 
 format:
   html:
