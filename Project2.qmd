@@ -84,5 +84,3 @@ ggplot(data=FlotusTopics, aes(y=mentions, x=year, color=Topics)) +
 ```
 
 Michelle Obama used her platform as First Lady to promote education, health, and opportunities for girls. I wanted to understand how her usage of these terms on Twitter changed over the course of her time in the White House. Although her total amount of tweets across all three terms increased from 2013 to 2014 and from 2014 to 2015, her usage of the term girl spiked particularly dramatically in 2015. She used all three terms less frequently in 2016. 
-
-
