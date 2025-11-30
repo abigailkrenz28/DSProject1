@@ -1,1 +1,18 @@
+---
+title: "Abigail Krenz"
+image: WebsiteImage.jpeg
+toc: false
+about:
+  template: jolla
+  image-shape: round
+  image-width: 17em
+  links:
+    - text: LinkedIn
+      href: https://www.linkedin.com/in/abigail-krenz-58b200217/
+    - text: GitHub
+      href: https://github.com/abigailkrenz28/DSProject1
+---
+
+Hello there! I study international relations and Middle Eastern studies at Pomona College.
+
 
