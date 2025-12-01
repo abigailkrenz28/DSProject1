@@ -2,10 +2,9 @@
 title: "Traffic Stops in Bay Area Cities"
 description: |
   What relationship existed between types of traffic stops and their outcomes in San Jose, San Francisco, and Oakland?
-  
 author: Abigail Krenz
 date: November 29, 2025
-format: 
+format:
   html:
     code-fold: true
     code-summary: "Show the code"
@@ -165,4 +164,4 @@ outcomes_by_type_oak |>
 
 CONCLUSION:
 
-This analysis revealed the inconsistent, and often incomplete ways, that traffic stops have been documented in these three Bay Area cities across time. Pedestrian stops were not documented at all in San Francisco and were only documented after the first two years of available data in Oakland. In both San Jose and Oakland, information on the type and outcome was missing for a high proportion of traffic stops. Nevertheless, preliminary analysis revealed that for both San Jose and Oakland, arrests were more common for pedestrian stops, and citations were more common for vehicular stops. 
+This analysis revealed the inconsistent, and often incomplete, ways that traffic stops have been documented in these three Bay Area cities across time. Pedestrian stops were not documented at all in San Francisco and were only documented after the first two years of available data in Oakland. In both San Jose and Oakland, information on the type and outcome was missing for a high proportion of traffic stops. Nevertheless, preliminary analysis revealed that for both San Jose and Oakland, arrests were more common for pedestrian stops, and citations were more common for vehicular stops. 
