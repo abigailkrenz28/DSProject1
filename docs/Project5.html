@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Abigail Krenz">
-<meta name="dcterms.date" content="2025-10-04">
-<meta name="description" content="An Analysis of Michelle Obama’s Twitter Usage from 2013 to 2016">
+<meta name="dcterms.date" content="2025-11-29">
+<meta name="description" content="What relationship existed between types of traffic stops and their outcomes in San Jose, San Francisco, and Oakland?">
 
-<title>FLOTUS Tweets – Abigail Krenz</title>
+<title>Traffic Stops in Bay Area Cities – Abigail Krenz</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -179,12 +179,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">FLOTUS Tweets</h1>
+<h1 class="title">Traffic Stops in Bay Area Cities</h1>
 </div>
 
 <div>
   <div class="description">
-    <p>An Analysis of Michelle Obama’s Twitter Usage from 2013 to 2016</p>
+    <p>What relationship existed between types of traffic stops and their outcomes in San Jose, San Francisco, and Oakland?</p>
   </div>
 </div>
 
@@ -201,7 +201,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 4, 2025</p>
+      <p class="date">November 29, 2025</p>
     </div>
   </div>
   
@@ -213,101 +213,204 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Data source: “Archived White House Websites and Social Media.” 2017. Barack Obama Presidential Library. Accessed October 4, 2025. <a href="https://www.obamalibrary.gov/digital-research-room/archived-white-house-websites-and-social-media">https://www.obamalibrary.gov/digital-research-room/archived-white-house-websites-and-social-media</a>.</p>
-<p>I analyzed data on Michelle Obama’s tweets from 2013 to 2016 to answer three questions: 1) What were her ten most common hashtags and how many times did she use them? 2) From which ten accounts did she retweet most frequently and how many times did she retweet for each? 3) How did her usage of words central to her policy platform—girls, health, and education—change from year to year?</p>
+<p>Data source: Pierson, Emma, Camelia Simoiu, Jan Overgoor, Sam Corbett-Davies, Daniel Jenson, Amy Shoemaker, Vignesh Ramachandran, et al.&nbsp;2020. “A Large-Scale Analysis of Racial Disparities in Police Stops Across the United States.” Nature Human Behaviour, 1–10. <a href="https://pubmed.ncbi.nlm.nih.gov/32367028/">https://pubmed.ncbi.nlm.nih.gov/32367028/</a>.</p>
+<p>Through this project, I hoped to analyze traffic stops across three Bay Area cities: San Jose, San Francisco, and Oakland. I was curious how the volume of traffic stops, including pedestrian stops, changed over time. I also wanted to determine whether there was a relationship between the type of stop–vehicular or pedestrian–and the outcome of the stop.</p>
+<p>I first opened a connection with the Stanford Open Policing database:</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>FlotusTweets <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"tweets.csv"</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>FlotusHashtags <span class="ot">&lt;-</span> FlotusTweets<span class="sc">|&gt;</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(tweet_id, text) <span class="sc">|&gt;</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">hashtags =</span> <span class="fu">str_extract_all</span>(text, <span class="st">"(?&lt;=#)</span><span class="sc">\\</span><span class="st">w+"</span>))</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>HashtagsUnnested <span class="ot">&lt;-</span> FlotusHashtags <span class="sc">|&gt;</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(hashtags)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>HashtagCounts <span class="ot">&lt;-</span> HashtagsUnnested <span class="sc">|&gt;</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(hashtags, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n)) <span class="sc">|&gt;</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">hashtags =</span> <span class="fu">fct_reorder</span>(hashtags, n))</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>HashtagCounts, <span class="fu">aes</span>(<span class="at">y=</span>hashtags, <span class="at">x=</span>n, <span class="at">fill=</span>hashtags)) <span class="sc">+</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"grey"</span>, <span class="dv">9</span>), <span class="st">"pink"</span>)) <span class="sc">+</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> </span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Michelle Obama's Top 10 Hashtags"</span>, <span class="at">y=</span><span class="st">"Hashtag"</span>, <span class="at">x=</span><span class="st">"Number of uses"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>con_traffic <span class="ot">&lt;-</span> DBI<span class="sc">::</span><span class="fu">dbConnect</span>(</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  RMariaDB<span class="sc">::</span><span class="fu">MariaDB</span>(),</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">dbname =</span> <span class="st">"traffic"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">host =</span> <span class="fu">Sys.getenv</span>(<span class="st">"TRAFFIC_HOST"</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">user =</span> <span class="fu">Sys.getenv</span>(<span class="st">"TRAFFIC_USER"</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">password =</span> <span class="fu">Sys.getenv</span>(<span class="st">"TRAFFIC_PWD"</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Project2_files/figure-html/dataviz1-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
 </div>
+<p>I then queried the tables of the three cities to find the total number of traffic stops made each month.</p>
+<div class="cell" data-output.var="stops_by_month">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="ot">"Oakland"</span> <span class="kw">AS</span> city, DATE_FORMAT(<span class="dt">date</span>, <span class="st">'%Y-%m'</span>) <span class="kw">AS</span> yr_month, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> num_stops</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>      <span class="kw">FROM</span> ca_oakland_2020_04_01</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>      <span class="kw">GROUP</span> <span class="kw">BY</span> yr_month</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="ot">"San Francisco"</span> <span class="kw">AS</span> city, DATE_FORMAT(<span class="dt">date</span>, <span class="st">'%Y-%m'</span>) <span class="kw">AS</span> yr_month, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> num_stops</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>      <span class="kw">FROM</span> ca_san_francisco_2020_04_01</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>      <span class="kw">GROUP</span> <span class="kw">BY</span> yr_month</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="ot">"San Jose"</span> <span class="kw">as</span> city, DATE_FORMAT(<span class="dt">date</span>, <span class="st">'%Y-%m'</span>) <span class="kw">AS</span> yr_month, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> num_stops</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>      <span class="kw">FROM</span> ca_san_jose_2020_04_01</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>      <span class="kw">GROUP</span> <span class="kw">BY</span> yr_month;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-</div>
-<p>As you can see from the graph above, Michelle Obama’s most commonly used hashtag was #LetGirlsLearn, followed by #ReachHigher, #GimmeFive, #62MillionGirls, and #LetsMove. Although her use of hashtags likely does not map on perfectly to her priorities, it provides some indication of the social media campaigns she was promoting most actively.</p>
+<p>Next, I charted these monthly traffic stops in a line graph. As you can see below, the time frame of available data differs across each city: In San Francisco, data began in 2007 and ended in mid-2026. For Oakland and San Jose, data began in 2013 and ended around 2018. San Francisco has consistently seen the highest numbers of stops, while the number of stops in Oakland and San Jose have been less and roughly comparable to one another.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>FlotusRetweets <span class="ot">&lt;-</span> FlotusTweets<span class="sc">|&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(tweet_id, timestamp, text) <span class="sc">|&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">retweets =</span> <span class="fu">str_extract</span>(text, <span class="st">"(?&lt;=RT @)</span><span class="sc">\\</span><span class="st">w+"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(retweets))</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>RetweetsUnnested <span class="ot">&lt;-</span> FlotusRetweets <span class="sc">|&gt;</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(retweets)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>RetweetCounts <span class="ot">&lt;-</span> RetweetsUnnested <span class="sc">|&gt;</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(retweets, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n)) <span class="sc">|&gt;</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">retweets =</span> <span class="fu">fct_reorder</span>(retweets, n))</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>RetweetCounts, <span class="fu">aes</span>(<span class="at">y=</span>retweets, <span class="at">x=</span>n, <span class="at">fill=</span>retweets)) <span class="sc">+</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"grey"</span>, <span class="dv">9</span>), <span class="st">"light blue"</span>)) <span class="sc">+</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> </span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Michelle Obama's Top 10 Accounts for Retweets"</span>, <span class="at">y=</span><span class="st">"Accounts"</span>, <span class="at">x=</span><span class="st">"Number of retweets"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>stops_by_month <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">yr_month =</span> <span class="fu">as.Date</span>(<span class="fu">str_c</span>(yr_month, <span class="st">"-01"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> yr_month, <span class="at">y =</span> num_stops, <span class="at">color =</span> city)) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Traffic Stops in Bay Area Cities by Month"</span>, <span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Traffic Stops"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Project2_files/figure-html/dataviz2-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Project5_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Michelle Obama retweeted from a number of accounts, especially the Let’s Move Campaign, the White House, the Joining Forces Campaign (an initiative with Jill Biden to support veterans), and the Reach Higher Campaign (for educational access). Clearly, she was promoting a variety of initiatives relevant to her platform as first lady.</p>
+<p>I then followed a similar process to examine the number of pedestrian stops made in the three cities over time.</p>
+<div class="cell" data-output.var="ped_stops_over_time">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="ot">"Oakland"</span> <span class="kw">AS</span> city, DATE_FORMAT(<span class="dt">date</span>, <span class="st">'%Y-%m'</span>) <span class="kw">AS</span> yr_month, <span class="fu">SUM</span>(<span class="kw">type</span> <span class="op">=</span> <span class="ot">"pedestrian"</span>) <span class="kw">AS</span> ped_stops</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>      <span class="kw">FROM</span> ca_oakland_2020_04_01</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>      <span class="kw">GROUP</span> <span class="kw">BY</span> yr_month</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="ot">"San Francisco"</span> <span class="kw">AS</span> city, DATE_FORMAT(<span class="dt">date</span>, <span class="st">'%Y-%m'</span>) <span class="kw">AS</span> yr_month, <span class="fu">SUM</span>(<span class="kw">type</span> <span class="op">=</span> <span class="ot">"pedestrian"</span>) <span class="kw">AS</span> ped_stops</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      <span class="kw">FROM</span> ca_san_francisco_2020_04_01</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>      <span class="kw">GROUP</span> <span class="kw">BY</span> yr_month</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="kw">UNION</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="ot">"San Jose"</span> <span class="kw">as</span> city, DATE_FORMAT(<span class="dt">date</span>, <span class="st">'%Y-%m'</span>) <span class="kw">AS</span> yr_month, <span class="fu">SUM</span>(<span class="kw">type</span> <span class="op">=</span> <span class="ot">"pedestrian"</span>) <span class="kw">AS</span> ped_stops</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>      <span class="kw">FROM</span> ca_san_jose_2020_04_01</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>      <span class="kw">GROUP</span> <span class="kw">BY</span> yr_month</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>As the following line graph reveals, even though the San Francisco data included a variable for the type of stop, no pedestrian stops were documented across the period. Oakland seems to have only begun documenting pedestrian stops in late 2015. In San Jose from 2013 to 2018, the numbers of pedestrian stops decreased, in Oakland from 2016 to 2018, the number of pedestrian stops did not noticably increase or decrease.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>FlotusTopics <span class="ot">&lt;-</span> FlotusTweets<span class="sc">|&gt;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(tweet_id, timestamp, text) <span class="sc">|&gt;</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">girls =</span> <span class="fu">str_detect</span>(text, <span class="st">"girls*"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">education =</span> <span class="fu">str_detect</span>(text, <span class="st">"education"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">health =</span> <span class="fu">str_detect</span>(text, <span class="st">"health"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">year</span>(timestamp)) <span class="sc">|&gt;</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, girls, education, health) <span class="sc">|&gt;</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(year)<span class="sc">|&gt;</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="fu">across</span>(<span class="fu">c</span>(girls, education, health), sum)) <span class="sc">|&gt;</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span>year, <span class="at">names_to=</span><span class="st">"Topics"</span>, <span class="at">values_to=</span><span class="st">"mentions"</span>)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data=</span>FlotusTopics, <span class="fu">aes</span>(<span class="at">y=</span>mentions, <span class="at">x=</span>year, <span class="at">color=</span>Topics)) <span class="sc">+</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_line</span>() <span class="sc">+</span> </span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>   <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Michelle Obama's Tweets on Girls, Education, and Health over Time"</span>, <span class="at">y=</span><span class="st">"Tweets"</span>, <span class="at">x=</span><span class="st">"Year"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ped_stops_over_time <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">yr_month =</span> <span class="fu">as.Date</span>(<span class="fu">str_c</span>(yr_month, <span class="st">"-01"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> yr_month, <span class="at">y =</span> ped_stops, <span class="at">color =</span> city)) <span class="sc">+</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Pedestrian Traffic Stops in Bay Area Cities Over Time"</span>, <span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Traffic Stops"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Project2_files/figure-html/dataviz3-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Project5_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Michelle Obama used her platform as First Lady to promote education, health, and opportunities for girls. I wanted to understand how her usage of these terms on Twitter changed over the course of her time in the White House. Although her total amount of tweets across all three terms increased from 2013 to 2014 and from 2014 to 2015, her usage of the term girl spiked particularly dramatically in 2015. She used all three terms less frequently in 2016.</p>
+<p>The following SQL chunk confirmed my suspicion that San Francisco only documented vehicular stops:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">DISTINCT</span> <span class="kw">type</span> <span class="kw">FROM</span> ca_san_francisco_2020_04_01;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>1 records</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">vehicular</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>To examine what relationship existed between the type of stop and its outcome (arrest, citation, etc.) across cities, I queried and graphed the data for all three cities.</p>
+<p>SAN FRANCISCO:</p>
+<p>Predictably, the graph for San Francisco was not very interesting because only one type of arrest existed in the data. Citations were by far the most common outcome followed by warnings. Only small numbers of stops ended in arrests, and only a tiny proportion of stops had outcomes that were not documented.</p>
+<div class="cell" data-output.var="outcomes_by_type">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> outcome, <span class="kw">type</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> <span class="fu">count</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ca_san_francisco_2020_04_01</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">type</span>, outcome;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>outcomes_by_type <span class="sc">|&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> type, <span class="at">y =</span> count, <span class="at">fill =</span> outcome)) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Traffic Stops in San Francisco by Type and Outcome, 2007-2016"</span>, <span class="at">fill =</span> <span class="st">"Outcome of Stop"</span>, <span class="at">x =</span> <span class="st">"Type of Stop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Project5_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>SAN JOSE:</p>
+<p>In San Jose, it was quite common for the outcome of a stop to be missing, especially for pedestrian stops, and no “warning” outcome was included. The type of stop was also missing for many observations. Arrests were more common for pedestrian stops as opposed to vehicular ones. Conversely, citations were more common for vehicular stops than for pedestrian ones.</p>
+<div class="cell" data-output.var="outcomes_by_type_sj">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> outcome, <span class="kw">type</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> <span class="fu">count</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ca_san_jose_2020_04_01</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">type</span>, outcome;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>outcomes_by_type_sj <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> type, <span class="at">y =</span> count, <span class="at">fill =</span> outcome)) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"citation"</span> <span class="ot">=</span> <span class="st">"#00BB38"</span>, <span class="st">"arrest"</span> <span class="ot">=</span> <span class="st">"#F7766D"</span>, <span class="st">"NA"</span> <span class="ot">=</span> <span class="st">"#7F7F7F"</span>)) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Traffic Stops in San Jose by Type and Outcome, 2013-2018"</span>, <span class="at">fill =</span> <span class="st">"Outcome of Stop"</span>, <span class="at">x =</span> <span class="st">"Type of Stop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Project5_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>OAKLAND:</p>
+<p>In Oakland, outcomes included a “warning category.” Although pedestrian stops were rare, a higher percentage of percentage of pedestrian stops ended in arrest in comparison to vehicular stops. Both warnings and citations were more common for vehicular stops.</p>
+<div class="cell" data-output.var="outcomes_by_type_oak">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> outcome, <span class="kw">type</span>, <span class="fu">COUNT</span>(<span class="op">*</span>) <span class="kw">AS</span> <span class="fu">count</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> ca_oakland_2020_04_01</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">type</span>, outcome;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>outcomes_by_type_oak <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> type, <span class="at">y =</span> count, <span class="at">fill =</span> outcome)) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Traffic Stops in Oakland by Type and Outcome, 2013-2018"</span>, <span class="at">fill =</span> <span class="st">"Outcome of Stop"</span>, <span class="at">x =</span> <span class="st">"Type of Stop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Project5_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>CONCLUSION:</p>
+<p>This analysis revealed the inconsistent, and often incomplete, ways that traffic stops have been documented in these three Bay Area cities across time. Pedestrian stops were not documented at all in San Francisco and were only documented after the first two years of available data in Oakland. In both San Jose and Oakland, information on the type and outcome was missing for a high proportion of traffic stops. Nevertheless, preliminary analysis revealed that for both San Jose and Oakland, arrests were more common for pedestrian stops, and citations were more common for vehicular stops.</p>
 
 
 
