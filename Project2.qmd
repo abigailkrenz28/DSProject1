@@ -20,7 +20,7 @@ To gain a general understanding of the Michelle Obama's tweeting habits while in
 ```{r warning=FALSE, message=FALSE}
 #| label: "michelleobama-tweeing-history"
 #| fig-alt: "Line graph shows Michelle Obama's tweeting volume from 2013 to 2016. Although there was significant month-to-month variation in tweeting volume, the First Lady's tweeting generally increased through to 2015, reached a high of 250 tweets in August 2015, and began to taper off in 2016."
-#| fig-cap: "Although there was significant month-to-month variation in tweeting volume, the First Lady's tweeting generally increased through to 2015, reached a high of 250 tweets in August 2015, and began to taper off in 2016."
+#| fig-cap: "Tweeting generally increased through to 2015, reached a high of 250 tweets in August 2015, and began to taper off in 2016."
 
 library(tidyverse)
 library(lubridate)
