@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Abigail Krenz">
-<meta name="dcterms.date" content="2025-12-06">
-<meta name="description" content="A permutation test to determine whether the higher female representation in the US Congress across the Democratic and Republican Parties is due to random chance">
+<meta name="dcterms.date" content="2025-09-24">
+<meta name="description" content="Analysis of the number of times racial categories were mentioned in leading ob-gyn journal articles on health disparities over time">
 
-<title>Gender Representation in the US Congress – Abigail Krenz</title>
+<title>Race in obgyn studies – Abigail Krenz</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -136,31 +136,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <ul class="dropdown-menu" aria-labelledby="nav-menu-data-viz">    
         <li>
     <a class="dropdown-item" href="./TidyTuesday1.html">
- <span class="dropdown-text">Inequality across countries</span></a>
+ <span class="dropdown-text">Tidy Tuesday 1</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./TidyTuesday2.html">
- <span class="dropdown-text">Race in obgyn studies</span></a>
+ <span class="dropdown-text">Tidy Tuesday 2</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./Project2.html">
- <span class="dropdown-text">FLOTUS Tweets</span></a>
+ <span class="dropdown-text">Project 2</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./Project3.html">
- <span class="dropdown-text">Gender Representation in the US Congress</span></a>
+ <span class="dropdown-text">Project 3</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./Project4.html">
- <span class="dropdown-text">Ethical Dilemmas of Risk Assessment Tools</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./Project5.html">
- <span class="dropdown-text">Traffic Stops in Bay Area Cities</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./Presentation.html">
- <span class="dropdown-text">Term Presentation</span></a>
+ <span class="dropdown-text">Project 4</span></a>
   </li>  
     </ul>
   </li>
@@ -175,25 +167,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#so-in-the-third-graph-i-chose-to-filter-out-all-racial-categories-except-for-white-black-asian-and-pacific-islander-to-see-if-i-could-discern-a-pattern.-although-this-graph-sacrifices-a-lot-of-information-it-clearly-shows-that-white-and-black-populations-have-been-studied-more-extensively-than-asian-americans-and-pacific-islanders-have-at-least-in-a-disagreggated-way." id="toc-so-in-the-third-graph-i-chose-to-filter-out-all-racial-categories-except-for-white-black-asian-and-pacific-islander-to-see-if-i-could-discern-a-pattern.-although-this-graph-sacrifices-a-lot-of-information-it-clearly-shows-that-white-and-black-populations-have-been-studied-more-extensively-than-asian-americans-and-pacific-islanders-have-at-least-in-a-disagreggated-way." class="nav-link active" data-scroll-target="#so-in-the-third-graph-i-chose-to-filter-out-all-racial-categories-except-for-white-black-asian-and-pacific-islander-to-see-if-i-could-discern-a-pattern.-although-this-graph-sacrifices-a-lot-of-information-it-clearly-shows-that-white-and-black-populations-have-been-studied-more-extensively-than-asian-americans-and-pacific-islanders-have-at-least-in-a-disagreggated-way.">So, in the third graph, I chose to filter out all racial categories except for white, Black, Asian, and Pacific Islander to see if I could discern a pattern. Although this graph sacrifices a lot of information, it clearly shows that white and Black populations have been studied more extensively than Asian Americans and Pacific Islanders have, at least in a disagreggated way.</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content column-page" id="quarto-document-content">
+<main class="content column-page-left" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Gender Representation in the US Congress</h1>
+<h1 class="title">Race in obgyn studies</h1>
 </div>
 
 <div>
   <div class="description">
-    <p>A permutation test to determine whether the higher female representation in the US Congress across the Democratic and Republican Parties is due to random chance</p>
+    <p>Analysis of the number of times racial categories were mentioned in leading ob-gyn journal articles on health disparities over time</p>
   </div>
 </div>
 
 
-<div class="quarto-title-meta column-page">
+<div class="quarto-title-meta column-page-left">
 
     <div>
     <div class="quarto-title-meta-heading">Author</div>
@@ -205,7 +203,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 6, 2025</p>
+      <p class="date">September 24, 2025</p>
     </div>
   </div>
   
@@ -217,107 +215,124 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<p>Link to data: https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-02-25/readme.md</p>
+<p>Original data source: Lewis, Ayodele G. et al.&nbsp;“Racial and ethnic disparities in reproductive medicine in the United States: a narrative review of contemporary high-quality evidence” American Journal of Obstetrics &amp; Gynecology, Volume 232, Issue 1, 82 - 91.e44.</p>
+<p>About my analysis</p>
+<p>This data set compiled articles on racial/ethnic health disparaties from the 8 highest impact ob/gyn journals. I hoped to visualize how the language used to describe racial categories in these medical studies had changed over time. The first two graphs are examples of poor data visualization. The first graph has undifferentiated black lines illustrating how many times a certain term for a racial category was used. It is not easy to see that the vast majority of terms were not used at all for most years, and we can’t identify which line refers to which term. The second graph assigned color to each term but because there were so many categories, the legend obsures the entire graph.</p>
+<section id="so-in-the-third-graph-i-chose-to-filter-out-all-racial-categories-except-for-white-black-asian-and-pacific-islander-to-see-if-i-could-discern-a-pattern.-although-this-graph-sacrifices-a-lot-of-information-it-clearly-shows-that-white-and-black-populations-have-been-studied-more-extensively-than-asian-americans-and-pacific-islanders-have-at-least-in-a-disagreggated-way." class="level2">
+<h2 class="anchored" data-anchor-id="so-in-the-third-graph-i-chose-to-filter-out-all-racial-categories-except-for-white-black-asian-and-pacific-islander-to-see-if-i-could-discern-a-pattern.-although-this-graph-sacrifices-a-lot-of-information-it-clearly-shows-that-white-and-black-populations-have-been-studied-more-extensively-than-asian-americans-and-pacific-islanders-have-at-least-in-a-disagreggated-way.">So, in the third graph, I chose to filter out all racial categories except for white, Black, Asian, and Pacific Islander to see if I could discern a pattern. Although this graph sacrifices a lot of information, it clearly shows that white and Black populations have been studied more extensively than Asian Americans and Pacific Islanders have, at least in a disagreggated way.</h2>
 <div class="cell">
-<details class="code-fold">
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reprex)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">47</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Reads data</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/unitedstates/congress-legislators/gh-pages/legislators-current.csv"</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>current_legislators <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(url)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#Adds numbers of men and women in each party</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>rep_and_dem_women <span class="ot">&lt;-</span> current_legislators <span class="sc">|&gt;</span> </span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(party, gender) <span class="sc">|&gt;</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(party) <span class="sc">|&gt;</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">proportion_gender_by_party =</span> count<span class="sc">/</span><span class="fu">sum</span>(count)) <span class="sc">|&gt;</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(party <span class="sc">==</span> <span class="st">"Democrat"</span> <span class="sc">|</span> party <span class="sc">==</span> <span class="st">"Republican"</span>)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#Creates segmented bar chart</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rep_and_dem_women, <span class="fu">aes</span>(<span class="at">x =</span> party, <span class="at">y =</span> count, <span class="at">fill =</span> gender)) <span class="sc">+</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"stack"</span>) <span class="sc">+</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Members of the US Congress by Party and Gender"</span>,</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>           <span class="at">x =</span> <span class="st">"Party"</span>,</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="st">"Number of Members"</span>,</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> <span class="st">"Gender"</span>) <span class="sc">+</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.1.0     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tuesdata <span class="ot">&lt;-</span> tidytuesdayR<span class="sc">::</span><span class="fu">tt_load</span>(<span class="st">'2025-02-25'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>---- Compiling #TidyTuesday Information for 2025-02-25 ----
+--- There are 2 files available ---
+
+
+── Downloading files ───────────────────────────────────────────────────────────
+
+  1 of 2: "article_dat.csv"
+  2 of 2: "model_dat.csv"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>article_dat <span class="ot">&lt;-</span> tuesdata<span class="sc">$</span>article_dat</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>model_dat <span class="ot">&lt;-</span> tuesdata<span class="sc">$</span>model_dat</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>race_language <span class="ot">&lt;-</span> article_dat <span class="sc">|&gt;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(study_year_end, race1, race2, race3, race4, race5, race6, race7, race8) <span class="sc">|&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> race1<span class="sc">:</span>race8, <span class="at">names_to =</span> <span class="st">"RaceNumber"</span>, <span class="at">values_to =</span> <span class="st">"race"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(study_year_end, race) <span class="sc">|&gt;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count=</span><span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(race) <span class="sc">==</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(study_year_end<span class="sc">!=-</span><span class="dv">99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'study_year_end'. You can override using
+the `.groups` argument.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> race_language, <span class="fu">aes</span>(<span class="at">x=</span>study_year_end, <span class="at">y=</span>count, <span class="at">group=</span>race)) <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Racial groups mentioned in ob-gyn studies over time (without color)"</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of mentions"</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure class="figure">
-<p><img src="Project3_files/figure-html/congress_parties_and_gender-1.png" class="img-fluid figure-img" alt="There are currently 156 female members in the US Congress, out of 538 voting members. The distribution of women across parties is uneven: 113 are part of the Democratic Party, and the other 43 are part of the Republican Party." width="672"></p>
-<figcaption>The distribution of women across parties is currently uneven, with 113 in the Democratic Party, and the other 43 in the Republican Party.</figcaption>
+<p><img src="TidyTuesday2_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> race_language, <span class="fu">aes</span>(<span class="at">x=</span>study_year_end, <span class="at">y=</span>count, <span class="at">color=</span>race)) <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Racial groups mentioned in ob-gyn studies (with color)"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of mentions"</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TidyTuesday2_files/figure-html/unnamed-chunk-1-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>There are currently 156 female members in the US Congress, out of 538 members. The distribution of women across parties is uneven: 113 are part of the Democratic Party, and the other 43 are part of the Republican Party. Assuming that women are equally likely to be a part of each party, how likely is it that number of Democratic women is 113 are more? How likely is it that different levels of female representation is related to the party rather than random chance? These questions lead to the following null and alternative hypotheses:</p>
-<p><strong>H<sub>0</sub>: The process that leads to whether a congressperson is female or male has nothing to do with political party. Therefore, the expected proportion of congresspeople who are women would be the same across political parties.</strong></p>
-<p><strong>H<sub>A</sub>: The process that leads to whether a congressperson is female or male is related to political party. Therefore, the expected proportion of congresswomen would be different across political party.</strong></p>
-<p>To test these hypotheses, I first wrangled data on the current members of Congress to calculate the numbers of men and women in each of the two main parties. Next, I created a data frame with the same numbers of Democrats, Republicans, women, and men, and then created a function that randomly assigned parties to the men and women in the data frame and then calculates the total number of Democratic women. Finally, I ran this function 5000 times using the map_dbl function and then calculated the number of times that Democratic women exceeded 113, divided by the number of iterations (5000). The figure below shows the distribution of the numbers of congresswomen in the Democratic Parity when the assignment of women to each party was random.</p>
 <div class="cell">
-<details class="code-fold">
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Creates starting data with current distribution of gender</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>start_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">gender =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"F"</span>, <span class="dv">156</span>), <span class="fu">rep</span>(<span class="st">"M"</span>, <span class="dv">382</span>)),</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">party =</span> <span class="fu">c</span>(<span class="fu">rep</span>(<span class="st">"Democrat"</span>, <span class="dv">262</span>), <span class="fu">rep</span>(<span class="st">"Republican"</span>, <span class="dv">276</span>)))</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Permutes party identification across male and female members of congress and finds the sum of Democratic women.</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>random_female_democrats <span class="ot">&lt;-</span> <span class="cf">function</span>(rep) {</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  start_data <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">perm_party =</span> <span class="fu">sample</span>(party)) <span class="sc">|&gt;</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(gender, perm_party) <span class="sc">|&gt;</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(perm_party <span class="sc">==</span> <span class="st">"Democrat"</span>, gender <span class="sc">==</span> <span class="st">"F"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(count) <span class="sc">|&gt;</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pull</span>()</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#Repeats permutation 5000 times, producing data frame with number of democratic women for each repetition.</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>num_exper <span class="ot">&lt;-</span> <span class="dv">5000</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>female_democrats <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(<span class="dv">1</span><span class="sc">:</span>num_exper, random_female_democrats)</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">#Plots distribution of random permutations</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>female_democrats <span class="sc">|&gt;</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>   <span class="fu">data.frame</span>() <span class="sc">|&gt;</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>   <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> female_democrats)) <span class="sc">+</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_histogram</span>() <span class="sc">+</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>   <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">113</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>   <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Number of women in Democratic seats in Congress"</span>,</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Numbers of Democratic women when party assignments are random"</span>,</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">subtitle =</span> <span class="st">"Higher female representation in the Democratic party is unlikely due to random chance."</span>) <span class="sc">+</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>tuesdata <span class="ot">&lt;-</span> tidytuesdayR<span class="sc">::</span><span class="fu">tt_load</span>(<span class="st">'2025-02-25'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>---- Compiling #TidyTuesday Information for 2025-02-25 ----
+--- There are 2 files available ---
+
+
+── Downloading files ───────────────────────────────────────────────────────────
+
+  1 of 2: "article_dat.csv"
+  2 of 2: "model_dat.csv"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>article_dat <span class="ot">&lt;-</span> tuesdata<span class="sc">$</span>article_dat</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>model_dat <span class="ot">&lt;-</span> tuesdata<span class="sc">$</span>model_dat</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>race_language <span class="ot">&lt;-</span> article_dat <span class="sc">|&gt;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(study_year_end, race1, race2, race3, race4, race5, race6, race7, race8) <span class="sc">|&gt;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> race1<span class="sc">:</span>race8, <span class="at">names_to =</span> <span class="st">"RaceNumber"</span>, <span class="at">values_to =</span> <span class="st">"race"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(study_year_end, race) <span class="sc">|&gt;</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count=</span><span class="fu">n</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(race) <span class="sc">==</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(study_year_end<span class="sc">!=-</span><span class="dv">99</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(race <span class="sc">==</span> <span class="st">"White"</span> <span class="sc">|</span> race <span class="sc">==</span> <span class="st">"Black"</span> <span class="sc">|</span> race <span class="sc">==</span> <span class="st">"Pacific Islander"</span> <span class="sc">|</span> race <span class="sc">==</span> <span class="st">"Asian American"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'study_year_end'. You can override using
+the `.groups` argument.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> race_language, <span class="fu">aes</span>(<span class="at">x=</span>study_year_end, <span class="at">y=</span>count, <span class="at">color=</span>race)) <span class="sc">+</span> <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Racial groups mentioned in oby-gyn studies (including only certain racial groups)"</span>,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Year"</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of mentions"</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure class="figure">
-<p><img src="Project3_files/figure-html/congress_gender_representative_permutation_test-1.png" class="img-fluid figure-img" alt="Histogram showing the distribution of numbers of Democratic congresswomen when party assignment was random. The distribution is centered at 78, and none of the simulations came close to reaching the current number of 113 women in the Democratic Party." width="672"></p>
-<figcaption>The distribution is centered at 78, and none of the simulations reached or exceeped the current number of 113 women in the Democratic Party.</figcaption>
+<p><img src="TidyTuesday2_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>As expected, the random distribution of Democratic women centers around 78, or half of the total women in Congress. The actual number of Democratic women in congressional seats far exceeds the number of women in Democratic seats when the assignment of party to women and men is random.</p>
-<p>Next, I calculated the p-value, denoting the probability that the number of Democratic congresswomen exceeded 113 if the party assignment of men and women were a random process repeated 5000 times.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculates p-value</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">p_value =</span> <span class="fu">sum</span>(female_democrats <span class="sc">&gt;=</span> <span class="dv">113</span>) <span class="sc">/</span> num_exper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>  p_value
-1       0</code></pre>
-</div>
-</div>
-<p>I calculated that when women are randomly assigned to Democratic and Republican seats 5000 times, the probability that 113 or more were in the Democratic Party was 0. This result means that we can reject the null hypothesis, providing evidence that the higher number of women in the Democratic Party, in comparison to the Republican Party, has something to do with the parties rather than random chance. Future research should determine the specific mechanisms facilitating greater female participation in the Democratic Party.</p>
-<p><strong>Data source:</strong> Zachary Kornbluth. 2025. Unitedstates/Congress-Legislators. Python. December 6, Released October 22, 2025. <a href="https://github.com/unitedstates/congress-legislators">https://github.com/unitedstates/congress-legislators</a>.</p>
-<p><strong>Original source:</strong> GovTrack.US. n.d. “List of Representatives and Senators.” Accessed December 6, 2025. <a href="https://www.govtrack.us/congress/members/current">https://www.govtrack.us/congress/members/current</a></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
