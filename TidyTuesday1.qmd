@@ -1,74 +1,43 @@
 ---
-title: "Race in obgyn studies"
+title: "Inequality across countries"
 description: |
-  Analysis of the number of times racial categories were mentioned in leading ob-gyn journal articles on health disparities over time
+  Graphing the Gini coefficients of 52 countries over time
 author: Abigail Krenz
-date: September 24, 2025
-format: html
+date: December 6, 2025
+format: 
+  html:
+    code-fold: true
+    code-summary: "Show the code"
 ---
 
-Link to data: <https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-02-25/readme.md>
+Using a World Bank data set, I visualized the inequality, as measured by the Gini coefficient, of 52 countries across the last few decades. Historically, South Africa has experienced the highest levels of inequality, followed by Brazil, although inequality in both countries has decreased over time. Countries with low levels of inequality included Iceland, Finland, and Switzerland. 
 
-Original data source: Lewis, Ayodele G. et al. "Racial and ethnic disparities in reproductive medicine in the United States: a narrative review of contemporary high-quality evidence" American Journal of Obstetrics & Gynecology, Volume 232, Issue 1, 82 - 91.e44.
+```{r warning=FALSE, message=FALSE}
+#| label: "ginicoefficient-over-time"
+#| fig-alt: "The line graph shows the Gini Coefficient of 52 countries over time. South Africa has experienced the highest levels of inequality, followed by Brazil, although inequality in both countries has decreased over time. Countries with low levels of inequality included Iceland, Finland, and Switzerland."
+#| fig-cap: "Country with the highest inequality by far was South Africa. Those with low inequality included Iceland, Finland, and Switzerland."
 
-About my analysis
-
-This data set compiled articles on racial/ethnic health disparaties from the 8 highest impact ob/gyn journals. I hoped to visualize how the language used to describe racial categories in these medical studies had changed over time. The first two graphs are examples of poor data visualization. The first graph has undifferentiated black lines illustrating how many times a certain term for a racial category was used. It is not easy to see that the vast majority of terms were not used at all for most years, and we can't identify which line refers to which term. The second graph assigned color to each term but because there were so many categories, the legend obsures the entire graph.
-
-## So, in the third graph, I chose to filter out all racial categories except for white, Black, Asian, and Pacific Islander to see if I could discern a pattern. Although this graph sacrifices a lot of information, it clearly shows that white and Black populations have been studied more extensively than Asian Americans and Pacific Islanders have, at least in a disagreggated way.
-
-```{r}
 library(tidyverse)
+library(plotly)
 
-tuesdata <- tidytuesdayR::tt_load('2025-02-25')
-article_dat <- tuesdata$article_dat
-model_dat <- tuesdata$model_dat
+#Reads data
+tuesdata <- tidytuesdayR::tt_load('2025-08-05')
+income_inequality_processed <- tuesdata$income_inequality_processed
+income_inequality_raw <- tuesdata$income_inequality_raw
 
-race_language <- article_dat |>
-  select(study_year_end, race1, race2, race3, race4, race5, race6, race7, race8) |>
-  pivot_longer(cols = race1:race8, names_to = "RaceNumber", values_to = "race") |>
-  group_by(study_year_end, race) |>
-  summarize(count=n()) |>
-  filter(is.na(race) == FALSE) |>
-  filter(study_year_end!=-99)
-  
-ggplot(data = race_language, aes(x=study_year_end, y=count, group=race)) + geom_line() +
-  labs(
-    title = "Racial groups mentioned in ob-gyn studies over time (without color)",
-    x = "Year",
-    y = "Number of mentions"
-  ) 
+plot <-ggplot(data=income_inequality_processed, 
+              aes(x=Year, 
+                  y=gini_mi_eq, 
+                  color=Entity, 
+                  text = paste('Country:', Entity))) +
+  geom_line() + 
+  labs(title="Inequality in countries across time", x="Year", y="Gini Coefficient", color="Country", caption = "Hello") + 
+  theme_minimal()
 
-ggplot(data = race_language, aes(x=study_year_end, y=count, color=race)) + geom_line() +
-  labs(
-    title = "Racial groups mentioned in ob-gyn studies (with color)",
-    x = "Year",
-    y = "Number of mentions"
-  ) 
-
-
+#Uses ggplotly to add interactive hover labeling
+ggplotly(plot, tooltip = "text")
 ```
 
-```{r}
-library(tidyverse)
+**Data:** [https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-08-05/readme.md](https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-08-05/readme.md)
 
-tuesdata <- tidytuesdayR::tt_load('2025-02-25')
-article_dat <- tuesdata$article_dat
-model_dat <- tuesdata$model_dat
-
-race_language <- article_dat |>
-  select(study_year_end, race1, race2, race3, race4, race5, race6, race7, race8) |>
-  pivot_longer(cols = race1:race8, names_to = "RaceNumber", values_to = "race") |>
-  group_by(study_year_end, race) |>
-  summarize(count=n()) |>
-  filter(is.na(race) == FALSE) |>
-  filter(study_year_end!=-99) |>
-  filter(race == "White" | race == "Black" | race == "Pacific Islander" | race == "Asian American")
-
-ggplot(data = race_language, aes(x=study_year_end, y=count, color=race)) + geom_line() +
-  labs(
-    title = "Racial groups mentioned in oby-gyn studies (including only certain racial groups)",
-    x = "Year",
-    y = "Number of mentions"
-  ) 
-```
+**Original source:** Joe Hasell, Bertha Rohenkohl, Pablo Arriagada, Esteban Ortiz-Ospina, and Max Roser (2023) - “Economic Inequality” Published online at OurWorldinData.org. Retrieved from: '[https://ourworldindata.org/economic-inequality](https://ourworldindata.org/economic-inequality)' \[Online Resource\]

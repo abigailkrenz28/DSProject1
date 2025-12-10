@@ -1,74 +1,135 @@
 ---
-title: "Race in obgyn studies"
+title: "Race in OB/GYN studies"
 description: |
-  Analysis of the number of times racial categories were mentioned in leading ob-gyn journal articles on health disparities over time
+  An analysis of racial categories mentioned in leading ob-gyn journal articles on health disparities over time
 author: Abigail Krenz
-date: September 24, 2025
-format: html
+date: December 6, 2025
+format: 
+  html:
+    code-fold: true
+    code-summary: "Show the code"
 ---
 
-Link to data: https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-02-25/readme.md
+Drawing from a data set of articles on racial and ethnic health disparities from the eight highest-impact OB/GYN journals, I hoped to visualize how the language used to describe racial categories in these medical studies had changed over time. In the process, I encountered some instructive challenges in data wrangling. As you can already see in the graph above (and repeated below), researchers used an extraordinary variety of terms to describe racial categories, making it difficult to discern patterns in their use.
 
-Original data source: Lewis, Ayodele G. et al. "Racial and ethnic disparities in reproductive medicine in the United States: a narrative review of contemporary high-quality evidence" American Journal of Obstetrics & Gynecology, Volume 232, Issue 1, 82 - 91.e44.
+I began by identifying all racial categories mentioned in the articles and the number of times they appeared. You can see the first ten lines of the wrangled data frame below:
+```{r warning=FALSE, message=FALSE}
+#| label: race-in-obgyn-studies-dataset
+#| fig-alt: "Shows first ten lines of a data frame containing the number of appearances of a certain racial category in a given year across the OB/GYN articles included in the dataset. All racial categories in the first ten lines were only used once per year."
+#| fig-cap: "All racial categories in the first ten lines were only used once per year."
 
-About my analysis
-
-This data set compiled articles on racial/ethnic health disparaties from the 8 highest impact ob/gyn journals. I hoped to visualize how the language used to describe racial categories in these medical studies had changed over time. The first two graphs are examples of poor data visualization. The first graph has undifferentiated black lines illustrating how many times a certain term for a racial category was used. It is not easy to see that the vast majority of terms were not used at all for most years, and we can't identify which line refers to which term. The second graph assigned color to each term but because there were so many categories, the legend obsures the entire graph.
-
-## So, in the third graph, I chose to filter out all racial categories except for white, Black, Asian, and Pacific Islander to see if I could discern a pattern. Although this graph sacrifices a lot of information, it clearly shows that white and Black populations have been studied more extensively than Asian Americans and Pacific Islanders have, at least in a disagreggated way.
-
-```{r}
 library(tidyverse)
+library(plotly)
 
+#Loads data
 tuesdata <- tidytuesdayR::tt_load('2025-02-25')
 article_dat <- tuesdata$article_dat
-model_dat <- tuesdata$model_dat
 
+#Wrangles racial categories and adds up the number of articles in which they appeared.
 race_language <- article_dat |>
   select(study_year_end, race1, race2, race3, race4, race5, race6, race7, race8) |>
   pivot_longer(cols = race1:race8, names_to = "RaceNumber", values_to = "race") |>
+  mutate(race = str_to_lower(race)) |>
   group_by(study_year_end, race) |>
   summarize(count=n()) |>
   filter(is.na(race) == FALSE) |>
   filter(study_year_end!=-99)
-  
+
+#Displays first three rows
+head(race_language, 10)
+```
+
+Next, I created a basic line graph of the illustrating how many times a certain term for a racial category was used. Because it uses undifferentiated black lines, it is not easy to see that most terms were not used at all for most years. Additionally, it is not possible to identify which line refers to which term.
+```{r warning=FALSE, message=FALSE}
+#| label: race-in-obgyn-studies
+#| fig-alt: "Line graph of racial groups mentioned in OB/GYN studies over time. There is no discernable pattern or trend across the time period, and many terms mentioned only once. The undifferentiated black lines make identifying specific terms impossible."
+#| fig-cap: "There is no discernable pattern or trend across the time period, and many terms are mentioned only once. The undifferentiated black lines make identifying specific terms impossible."
+
+#Line graph (without color)
 ggplot(data = race_language, aes(x=study_year_end, y=count, group=race)) + geom_line() +
   labs(
-    title = "Racial groups mentioned in ob-gyn studies over time (without color)",
+    title = "Racial groups mentioned in OB/GYN studies over time (without color coding)",
     x = "Year",
     y = "Number of mentions"
-  ) 
-
-ggplot(data = race_language, aes(x=study_year_end, y=count, color=race)) + geom_line() +
-  labs(
-    title = "Racial groups mentioned in ob-gyn studies (with color)",
-    x = "Year",
-    y = "Number of mentions"
-  ) 
-
-
+  ) +
+  theme_minimal()
 ```
 
-```{r}
-library(tidyverse)
 
-tuesdata <- tidytuesdayR::tt_load('2025-02-25')
-article_dat <- tuesdata$article_dat
-model_dat <- tuesdata$model_dat
+However, when I assigned a specific color to each term in the graph below, there were so many categories that the legend obscured the entire graph.
+```{r warning=FALSE, message=FALSE}
+#| label: race-in-obgyn-studies-with color
+#| fig-alt: "Line graph of racial groups mentioned in OB/GYN studies over time with color coding. There are so many racial categories that the legend takes up the entire space."
+#| fig-cap: "There are so many racial categories that the legend takes up the entire space."
 
-race_language <- article_dat |>
-  select(study_year_end, race1, race2, race3, race4, race5, race6, race7, race8) |>
-  pivot_longer(cols = race1:race8, names_to = "RaceNumber", values_to = "race") |>
-  group_by(study_year_end, race) |>
-  summarize(count=n()) |>
-  filter(is.na(race) == FALSE) |>
-  filter(study_year_end!=-99) |>
-  filter(race == "White" | race == "Black" | race == "Pacific Islander" | race == "Asian American")
-
-ggplot(data = race_language, aes(x=study_year_end, y=count, color=race)) + geom_line() +
+#Line graph with color
+ggplot(data = race_language, 
+       aes(x=study_year_end, y=count, color=race)) + 
+  geom_line() +
   labs(
-    title = "Racial groups mentioned in oby-gyn studies (including only certain racial groups)",
+    title = "Racial groups mentioned in OB/GYN studies (with color coding)",
     x = "Year",
     y = "Number of mentions"
-  ) 
+  ) +
+  theme_minimal()
 ```
+
+Adding interactive hover labeling in the graph below through plotly partially addressed this problem by allowing the viewer to more easily identify which line referred to which term. 
+```{r warning=FALSE, message=FALSE}
+#| label: race-in-obgyn-studies-plotly
+#| fig-alt: "Line graph of racial groups mentioned in OB/GYN studies over time. Interactive hover labelling makes identifying specific racial categories on the graph easier, but with so many lines are overlapping, it is still difficult to see all the categories."
+#| fig-cap: "Interactive hover labelling makes identifying specific racial categories on the graph easier, but with so many lines are overlapping, it is still difficult to see all the categories."
+
+plot <- ggplot(data = race_language, 
+               aes(x=study_year_end, y=count, color=race, text = paste('Race:', race))) + 
+  geom_line() +
+  labs(
+    title = "Racial groups mentioned in OB/GYN studies over time (with interactive labeling)",
+    x = "Year",
+    y = "Number of mentions",
+    color = "Race"
+  ) +
+  theme_minimal()
+
+#Hover labelling
+ggplotly(plot, tooltip = "text")
+```
+
+Finally, I chose to filter out all racial categories except for white, Black, Asian, Hispanic, and Pacific Islander to see if I could discern a pattern in the use of these terms over time. 
+
+```{r warning=FALSE, message=FALSE}
+#| label: race-in-obgyn-studies-for-certain-groups
+#| fig-alt: "Line graph tracking the number of mentions of certain racial groups (white, Black, Asian, Pacific Islander, Hispanic, and Asian/Pacific Islander) in OB/GYN studies over time. White, Black, and Hispanic were mentioned a fairly comparable amount, Asian and Asian/Pacific Islander were mentioned less, and Pacific Islander was not mentioned at all."
+#| fig-cap: "White, Black, and Hispanic were mentioned a fairly comparable amount, Asian and Asian/Pacific Islander were mentioned less, and Pacific Islander was not mentioned at all."
+
+#Filtered for certain racial categories
+race_language2 <- race_language |>
+  filter(race == "white" | 
+           race == "black" | 
+           race == "pacific islander" | 
+           race == "asian" | 
+           race == "asian/pacific islander" | 
+           race == "hispanic")
+
+#Line graph
+ggplot(data = race_language2, 
+       aes(x=study_year_end, y=count, color=race)) + 
+  geom_line() +
+  labs(
+    title = "Racial groups mentioned in OB/GYN studies (including only certain racial groups)",
+    x = "Year",
+    y = "Number of mentions",
+    color = "Race"
+  ) +
+  theme_minimal()
+```
+
+Although this graph sacrifices information, it shows that white, Black, and Hispanic populations have been studied more extensively than Asian Americans and Pacific Islander populations have been. Indeed, Pacific Islanders were not mentioned at all as a singular group. This finding suggests that researchers should prioritize more disaggregated studies of Pacific Islanders to better understand their unique reproductive health needs. The high level of year-to-year variation makes it difficult to discern whether there was any particular trend in the mentions of these terms over time.
+
+**Conclusion:** 
+
+None of these graphs clearly captured all of the information due to the inconsistency in how racial groups were described and categorized across OB/GYN studies. Although this diversity is perhaps to be expected, it makes it more difficult for researchers to identify and compile health research focused on a specific racial group. 
+
+**Data:** [https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-02-25/readme.md](https://github.com/rfordatascience/tidytuesday/blob/main/data/2025/2025-02-25/readme.md)
+
+**Original source:** Lewis, Ayodele G. et al. "Racial and ethnic disparities in reproductive medicine in the United States: a narrative review of contemporary high-quality evidence" American Journal of Obstetrics & Gynecology, Volume 232, Issue 1, 82 - 91.e44. [https://pubmed.ncbi.nlm.nih.gov/39059596/](https://pubmed.ncbi.nlm.nih.gov/39059596/).

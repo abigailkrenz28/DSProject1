@@ -1,0 +1,371 @@
+---
+title: "DS Final Presentation"
+author: "Abigail Krenz"
+subtitle: "December 10, 2025"
+format:
+  revealjs:
+    scrollable: true
+    slide-number: true
+    show-slide-number: all
+    embed-resources: false
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# FLOTUS Tweets
+
+## Introduction {.smaller}
+
+**Data Source:** 
+
+“Archived White House Websites and Social Media.” 2017. Barack Obama Presidential Library. Accessed October 4, 2025. [https://www.obamalibrary.gov/digital-research-room/archived-white-house-websites-and-social-media](https://www.obamalibrary.gov/digital-research-room/archived-white-house-websites-and-social-media). 
+
+**Research questions:**  
+
+1. What were Michelle Obama's top ten hash tags, and how many times did she use them? 
+2. From which ten accounts, did Michelle Obama re-tweet most frequently, and how many times did she re-tweet from each?
+3. How did her usage of words central to her policy platform—girls, health, and education—change from year to year?
+
+## Introducing the data set {.nostretch}
+
+```{r warning=FALSE, message=FALSE}
+#| label: "michelleobama-tweet-data"
+#| fig-alt: "Variables in Michelle Obama's tweeting archive. Notable variables include tweet_id, timestamp, and text."
+
+library(tidyverse)
+library(lubridate)
+
+flotus_tweets <- read.csv("tweets.csv")
+
+names(flotus_tweets)
+```
+
+## Tweeting volume over time {.nostretch}
+
+```{r warning=FALSE, message=FALSE}
+#| label: "michelleobama-tweeting-history"
+#| fig-alt: "Line graph shows Michelle Obama's tweeting volume from 2013 to 2016. Although there was significant month-to-month variation in tweeting volume, the First Lady's tweeting generally increased through to 2015, reached a high of 250 tweets in August 2015, and began to taper off in 2016."
+#| echo: false
+
+flotus_tweets_over_time <- flotus_tweets |>
+  mutate(year_month = floor_date(as_date(timestamp), "month")) |>
+  group_by(year_month) |>
+  summarize(count = n())
+
+ggplot(data = flotus_tweets_over_time, 
+       aes(x = year_month, y = count)) +
+  geom_line(color = "pink", size = 1.5) +
+  labs(x = "Year", 
+       y = "Number of Tweets", 
+       title = "Michelle Obama's Tweeting History") +
+  theme_minimal()
+```
+
+## Hashtags {.nostretch}
+
+```{r warning=FALSE, message=FALSE}
+#| label: "michelleobama-top-ten-tweets"
+#| fig-alt: "Bar graph shows Michelle Obama's top 10 tweets. Her most commonly used hashtag was #LetGirlsLearn (397), followed by #ReachHigher (302), #GimmeFive (163), #62MillionGirls (160), and #LetsMove (153). "
+#| echo: false
+
+#Extracts hash tags
+flotus_hashtags <- flotus_tweets |>
+  select(tweet_id, text) |>
+  mutate(hashtags = str_extract_all(text, "(?<=#)\\w+"))
+
+#Unnests hash tags
+hashtags_unnested <- flotus_hashtags |>
+  unnest(hashtags)
+
+#Counts instances of each hash tag and reports top 10
+hashtag_counts <- hashtags_unnested |>
+  count(hashtags, sort = TRUE) |>
+  arrange(desc(n)) |>
+  head(10) |>
+  mutate(hashtags = fct_reorder(hashtags, n))
+
+#Bar chart
+ggplot(data=hashtag_counts, 
+       aes(y=hashtags, x=n, fill=hashtags)) +
+  scale_fill_manual(values = c(rep("grey", 9), "pink")) +
+  geom_col(show.legend = FALSE) + 
+  labs(title = "Michelle Obama's Top 10 Hashtags", 
+       y="Hashtag", 
+       x="Number of uses") +
+  theme_minimal()
+```
+
+## Retweets {.nostretch}
+
+```{r warning=FALSE, message=FALSE}
+#| label: "top-retweets"
+#| fig-alt: "Bar chart reports the top ten accounts Michelle Obama retweeted from. The top accounts were the Let's Move Campaign (102 times), the White House (87 times), the Joining Forces Campaign (64 times), and the Reach Higher Campaign (48 times)."
+#| echo: false
+
+#Extracts retweets by identifying words following @
+flotus_retweets <- flotus_tweets|>
+  select(tweet_id, timestamp, text) |>
+  mutate(retweets = str_extract(text, "(?<=RT @)\\w+")) |>
+  filter(!is.na(retweets))
+
+#Unnests retweets
+retweets_unnested <- flotus_retweets |>
+  unnest(retweets)
+
+#Counts instances of retweets and reports top 10 most common
+retweet_counts <- retweets_unnested |>
+  count(retweets, sort = TRUE) |>
+  arrange(desc(n)) |>
+  head(10) |>
+  mutate(retweets = fct_reorder(retweets, n))
+
+ggplot(data=retweet_counts, aes(y=retweets, x=n, fill=retweets)) +
+  scale_fill_manual(values = c(rep("grey", 9), "light blue")) +
+  geom_col(show.legend = FALSE) + 
+  labs(title = "Michelle Obama's Top 10 Accounts for Retweets", 
+       y="Accounts", 
+       x="Number of retweets") +
+  theme_minimal()
+
+```
+
+## Issue areas {.nostretch}
+
+```{r warning=FALSE, message=FALSE}
+#| label: "girl-education-health-tweets"
+#| fig-alt: "Line graph tracks number of Michelle Obama's tweets mentioning girls, education, and health over time. Although her total amount of tweets including these three terms increased from 2013 to 2014 and from 2014 to 2015, her usage of the term 'girl' spiked particularly dramatically in 2015 (184 mentions). She used all three terms less frequently in 2016, when her Twitter usage generally was tapering off."
+#| echo: false
+
+#Creates three new columns representing whether each of the three terms were mentioned in the tweet
+flotus_topics <- flotus_tweets|>
+  select(tweet_id, timestamp, text) |>
+  mutate(girls = str_detect(text, "girls*")) |>
+  mutate(education = str_detect(text, "education")) |>
+  mutate(health = str_detect(text, "health")) |>
+  mutate(year = year(timestamp)) |>
+  group_by(year, girls, education, health) |>
+  group_by(year) |>
+  summarize(across(c(girls, education, health), sum)) |> #Finds total mentions of each category
+  pivot_longer(-year, names_to="Topics", values_to="mentions") #Pivots longer for ggplot
+
+ggplot(data=flotus_topics, 
+       aes(y=mentions, x=year, color=Topics)) +
+   geom_line() + 
+   labs(title = "Michelle Obama's Tweets on Girls, Education, and Health over Time", 
+        y="Tweets", 
+        x="Year") +
+  theme_minimal()
+```
+
+## Conclusion
+
+- Use of regular expressions to extract data
+- More active social media use during the mid-years of Obama's second term
+
+# Bay Area Traffic Stops
+
+## Introduction {.smaller}
+
+**Data**: 
+
+Pierson, Emma, Camelia Simoiu, Jan Overgoor, Sam Corbett-Davies, Daniel Jenson, Amy Shoemaker, Vignesh Ramachandran, et al. 2020. “A Large-Scale Analysis of Racial Disparities in Police Stops Across the United States.” Nature Human Behaviour, 1–10. [https://pubmed.ncbi.nlm.nih.gov/32367028/](https://pubmed.ncbi.nlm.nih.gov/32367028/).
+
+**Research questions:** 
+
+- How did the volume of traffic stops (and pedestrian stops specifically) change over time in San Jose, San Francisco, and Oakland?
+- Does a relationship exist between the type of stop (vehicular or pedestrian) and the stop's outcome in these three Bay Area cities?
+
+## Traffic Stops by Month
+
+```{r warning=FALSE, message=FALSE}
+#| echo: false
+
+library(tidyverse)
+con_traffic <- DBI::dbConnect(
+  RMariaDB::MariaDB(),
+  dbname = "traffic",
+  host = Sys.getenv("TRAFFIC_HOST"),
+  user = Sys.getenv("TRAFFIC_USER"),
+  password = Sys.getenv("TRAFFIC_PWD")
+)
+```
+
+```{sql warning=FALSE, message=FALSE}
+#| connection: con_traffic
+#| output.var: "stops_by_month"
+#| echo: false
+
+SELECT "Oakland" AS city, DATE_FORMAT(date, '%Y-%m') AS yr_month, COUNT(*) AS num_stops
+      FROM ca_oakland_2020_04_01
+      GROUP BY yr_month
+      
+UNION
+
+SELECT "San Francisco" AS city, DATE_FORMAT(date, '%Y-%m') AS yr_month, COUNT(*) AS num_stops
+      FROM ca_san_francisco_2020_04_01
+      GROUP BY yr_month
+
+UNION
+
+SELECT "San Jose" as city, DATE_FORMAT(date, '%Y-%m') AS yr_month, COUNT(*) AS num_stops
+      FROM ca_san_jose_2020_04_01
+      GROUP BY yr_month;
+```
+
+```{r warning=FALSE, message=FALSE}
+#| label: stops_three_cities
+#| fig-alt: "Line graph depicting monthly traffic stop totals in three Bay Area cities. In San Francisco from 2007 to 2014, monthly traffic stops ranged from around 4,000 to 10,500, seeing a slight decrease from 2010 to 2014. In Oakland from 2013 to 2018, monthly stops ranged from 4,000 to 1,500, with the exception of a spike in October 2013, when stops nearly reached 6,000. In San Jose from 2013 to 2018, stops ranged from 1,500 to 4,000."
+#| echo: false
+
+stops_by_month |>
+  mutate(yr_month = as.Date(str_c(yr_month, "-01"))) |>
+  ggplot(aes(x = yr_month, y = num_stops, color = city)) +
+    geom_line() +
+    labs(title = "Traffic Stops in Bay Area Cities by Month", 
+         x = "Year", 
+         y = "Traffic Stops") +
+  theme_minimal()
+```
+
+## Pedestrian stops by month
+```{sql warning=FALSE, message=FALSE}
+#| connection: con_traffic
+#| output.var: "ped_stops_over_time"
+#| echo: false
+
+SELECT "Oakland" AS city, DATE_FORMAT(date, '%Y-%m') AS yr_month, SUM(type = "pedestrian") AS ped_stops
+      FROM ca_oakland_2020_04_01
+      GROUP BY yr_month
+      
+UNION
+
+SELECT "San Francisco" AS city, DATE_FORMAT(date, '%Y-%m') AS yr_month, SUM(type = "pedestrian") AS ped_stops
+      FROM ca_san_francisco_2020_04_01
+      GROUP BY yr_month
+
+UNION
+
+SELECT "San Jose" as city, DATE_FORMAT(date, '%Y-%m') AS yr_month, SUM(type = "pedestrian") AS ped_stops
+      FROM ca_san_jose_2020_04_01
+      GROUP BY yr_month
+
+```
+
+```{r warning=FALSE, message=FALSE}
+#| label: ped_stops_three_cities
+#| fig-alt: "Line graph depicting monthly pedestrian traffic stop totals in three Bay Area cities. In San Francisco from 2007 to 2014, there were zero pedestrian stops. In Oakland from 2013 to 2018, monthly stops were zero until mid-2015 and thereafter ranged from 200 to 400. In San Jose from mid-2013 to mid-2018, pedestrian stops peaked at over 1500 in October 2013 and generally descreased until mid-2016 when it seemed to stabilize around 500 stops."
+#| echo: false
+
+ped_stops_over_time |>
+  mutate(yr_month = as.Date(str_c(yr_month, "-01"))) |>
+  ggplot(aes(x = yr_month, y = ped_stops, color = city)) +
+    geom_line(alpha = 0.8) +
+    labs(title = "Pedestrian Traffic Stops in Bay Area Cities Over Time", 
+         x = "Year", 
+         y = "Traffic Stops") +
+  theme_minimal()
+```
+
+## What happened with pedestrian stops in San Francisco?
+```{sql warning=FALSE, message=FALSE}
+#| connection: con_traffic
+
+SELECT DISTINCT type FROM ca_san_francisco_2020_04_01;
+```
+
+## Investigating Type of Stop and Outcome
+
+To examine what relationship existed between the type of stop and its outcome (arrest, citation, etc.) across cities, I queried and graphed the data for all three cities.
+
+## San Francisco
+
+```{sql warning=FALSE, message=FALSE}
+#| connection: con_traffic
+#| output.var: "outcomes_by_type"
+#| echo: false
+
+SELECT outcome, type, COUNT(*) AS count
+FROM ca_san_francisco_2020_04_01
+GROUP BY type, outcome;
+```
+
+```{r warning=FALSE, message=FALSE}
+#| label: sf_stop_outcomes
+#| fig-alt: "Segmented bar chart showing stops by type and outcome in San Francisco. Among vehicular stops, citations were by far the most common outcome followed by warnings. Only small numbers of stops ended in arrests, and only a tiny proportion of stops had outcomes that were not documented."
+#| echo: false
+
+#Bar graph
+outcomes_by_type |>
+  ggplot(aes(x = type, y = count, fill = outcome)) +
+      geom_bar(stat = "identity") +
+      labs(title = "Traffic Stops in San Francisco by Type and Outcome, 2007-2016", 
+           fill = "Outcome of Stop", 
+           x = "Type of Stop") +
+  theme_minimal()
+```
+
+## San Jose
+```{sql warning=FALSE, message=FALSE}
+#| connection: con_traffic
+#| output.var: "outcomes_by_type_sj"
+#| echo: false
+
+SELECT outcome, type, COUNT(*) AS count
+FROM ca_san_jose_2020_04_01
+GROUP BY type, outcome;
+
+```
+
+```{r warning=FALSE, message=FALSE}
+#| label: sj_stop_outcomes
+#| fig-alt: "Segmented bar chart showing stops by type and outcome in San Jose. In San Jose, most stops were vehicular, among which over half had no documented outcome (61970), many ended in citation (34107), and a very small number ended in arrests (1884). Among pedestrian stops, over 3/4 had no documented outcome (29149), a comparatively higher percentage ended in arrest (3421), and comparatively fewer ended in citation (5056). Among the significant number of stops not categorized as vehicular or pedestrian, 3626 has no outcome, 7058 ended in arrest, and 6563 ended in citation."
+#| echo: false
+
+#Bar graph
+outcomes_by_type_sj |>
+  ggplot(aes(x = type, y = count, fill = outcome)) +
+      geom_bar(stat = "identity") +
+      scale_fill_manual(values = c("citation" = "#00BB38", "arrest" = "#F7766D", "NA" = "#7F7F7F")) +
+      labs(title = "Traffic Stops in San Jose by Type and Outcome, 2013-2018", 
+           fill = "Outcome of Stop", 
+           x = "Type of Stop") +
+  theme_minimal()
+```
+
+## Oakland
+```{sql warning=FALSE, message=FALSE}
+#| connection: con_traffic
+#| output.var: "outcomes_by_type_oak"
+#| echo: false
+
+SELECT outcome, type, COUNT(*) AS count
+FROM ca_oakland_2020_04_01
+GROUP BY type, outcome;
+
+```
+
+```{r warning=FALSE, message=FALSE}
+#| label: oakland_stop_outcomes
+#| fig-alt: "Segmented bar chart showing stops by type and outcome in Oakland. In Oakland, most stops were vehicular, among which less than a quarter had no documented outcome (22008), many ended in citations (49410) and warnings (28146), and a small number ended in arrests (6693). Among the small number of pedestrian stops, there were 2855 arrests, 565 citations, 1174 warnings, and 2490 with no documented outcome. Among the significant number of stops not categorized as vehicular or pedestrian, 9609 has no outcome, 6642 ended in arrest, 2451 ended in citation, and 1364 ended in a warning."
+#| echo: false
+
+#Bar graph
+outcomes_by_type_oak |>
+  ggplot(aes(x = type, y = count, fill = outcome)) +
+      geom_bar(stat = "identity") +
+      labs(title = "Traffic Stops in Oakland by Type and Outcome, 2013-2018", 
+           fill = "Outcome of Stop",
+           x = "Type of Stop") +
+  theme_minimal()
+```
+
+## Conclusion
+- Traffic stops have been documented in **incomplete** and **inconsistent** ways in these three Bay Area cities across time
+- For both San Jose and Oakland, arrests were more common for pedestrian stops than vehicular ones, and citations were more common for vehicular stops than pedestrian ones
+
+# Thank you!
+
+
+

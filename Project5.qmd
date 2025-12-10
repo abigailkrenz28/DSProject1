@@ -1,20 +1,16 @@
 ---
 title: "Traffic Stops in Bay Area Cities"
 description: |
-  What relationship existed between types of traffic stops and their outcomes in San Jose, San Francisco, and Oakland?
+  What relationship existed between types of traffic stops and their outcomes in San Jose, San Francisco, and Oakland in the 2000s and 2010s?
 author: Abigail Krenz
-date: November 29, 2025
+date: December 6, 2025
 format:
   html:
     code-fold: true
     code-summary: "Show the code"
 ---
 
-Data source: Pierson, Emma, Camelia Simoiu, Jan Overgoor, Sam Corbett-Davies, Daniel Jenson, Amy Shoemaker, Vignesh Ramachandran, et al. 2020. “A Large-Scale Analysis of Racial Disparities in Police Stops Across the United States.” Nature Human Behaviour, 1–10. [https://pubmed.ncbi.nlm.nih.gov/32367028/](https://pubmed.ncbi.nlm.nih.gov/32367028/).
-
-Through this project, I hoped to analyze traffic stops across three Bay Area cities: San Jose, San Francisco, and Oakland. I was curious how the volume of traffic stops, including pedestrian stops, changed over time. I also wanted to determine whether there was a relationship between the type of stop--vehicular or pedestrian--and the outcome of the stop. 
-
-I first opened a connection with the Stanford Open Policing database:
+Using data from the Stanford Open Policing database, this project aimed to analyze traffic stops across three Bay Area cities: San Jose, San Francisco, and Oakland. Specifically, I was curious how the volume of traffic stops, and pedestrian stops specifically, changed over time. I also wanted to determine whether there was a relationship between the type of stop (vehicular or pedestrian) and the stop's outcome. I first opened a connection with the Stanford Open Policing database:
 ```{r warning=FALSE, message=FALSE}
 library(tidyverse)
 con_traffic <- DBI::dbConnect(
@@ -27,7 +23,7 @@ con_traffic <- DBI::dbConnect(
 ```
 
 
-I then queried the tables of the three cities to find the total number of traffic stops made each month. 
+I then queried the tables of the three cities to find the total number of traffic stops made each month:
 ```{sql warning=FALSE, message=FALSE}
 #| connection: con_traffic
 #| output.var: "stops_by_month"
@@ -49,14 +45,21 @@ SELECT "San Jose" as city, DATE_FORMAT(date, '%Y-%m') AS yr_month, COUNT(*) AS n
       GROUP BY yr_month;
 ```
 
-Next, I charted these monthly traffic stops in a line graph. As you can see below, the time frame of available data differs across each city: In San Francisco, data began in 2007 and ended in mid-2026. For Oakland and San Jose, data began in 2013 and ended around 2018. San Francisco has consistently seen the highest numbers of stops, while the number of stops in Oakland and San Jose have been less and roughly comparable to one another.
+Next, I charted these monthly traffic stops in a line graph. As you can see below, the time frame of available data differs across each city: In San Francisco, data began in 2007 and ended in mid-2026. For Oakland and San Jose, data began in 2013 and ended around 2018. San Francisco has consistently seen the highest numbers of stops, while the number of stops in Oakland and San Jose have been less, and roughly comparable to one another.
 
 ```{r warning=FALSE, message=FALSE}
+#| label: stops_three_cities
+#| fig-alt: "Line graph depicting monthly traffic stop totals in three Bay Area cities. In San Francisco from 2007 to 2014, monthly traffic stops ranged from around 4,000 to 10,500, seeing a slight decrease from 2010 to 2014. In Oakland from 2013 to 2018, monthly stops ranged from 4,000 to 1,500, with the exception of a spike in October 2013, when stops nearly reached 6,000. In San Jose from 2013 to 2018, stops ranged from 1,500 to 4,000."
+#| fig-cap: "In San Francisco from 2007 to 2014, monthly traffic stops ranged from around 4,000 to 10,500, seeing a slight decrease from 2010 to 2014. In Oakland from 2013 to 2018, monthly stops ranged from 4,000 to 1,500, with the exception of a spike in October 2013, when stops nearly reached 6,000. In San Jose from 2013 to 2018, stops ranged from 1,500 to 4,000."
+
 stops_by_month |>
   mutate(yr_month = as.Date(str_c(yr_month, "-01"))) |>
   ggplot(aes(x = yr_month, y = num_stops, color = city)) +
     geom_line() +
-    labs(title = "Traffic Stops in Bay Area Cities by Month", x = "Year", y = "Traffic Stops")
+    labs(title = "Traffic Stops in Bay Area Cities by Month", 
+         x = "Year", 
+         y = "Traffic Stops") +
+  theme_minimal()
 ```
 
 I then followed a similar process to examine the number of pedestrian stops made in the three cities over time.
@@ -83,25 +86,33 @@ SELECT "San Jose" as city, DATE_FORMAT(date, '%Y-%m') AS yr_month, SUM(type = "p
 ```
 
 
-As the following line graph reveals, even though the San Francisco data included a variable for the type of stop, no pedestrian stops were documented across the period. Oakland seems to have only begun documenting pedestrian stops in late 2015. In San Jose from 2013 to 2018, the numbers of pedestrian stops decreased, in Oakland from 2016 to 2018, the number of pedestrian stops did not noticably increase or decrease.
+As the following line graph reveals, even though the San Francisco data included a variable for the type of stop, no pedestrian stops were documented across the period. Oakland seems to have only begun documenting pedestrian stops in late 2015. In San Jose from 2013 to 2018, the numbers of pedestrian stops decreased, in Oakland from 2016 to 2018, the number of pedestrian stops did not noticeably increase or decrease.
 ```{r warning=FALSE, message=FALSE}
+#| label: ped_stops_three_cities
+#| fig-alt: "Line graph depicting monthly pedestrian traffic stop totals in three Bay Area cities. In San Francisco from 2007 to 2014, there were zero pedestrian stops. In Oakland from 2013 to 2018, monthly stops were zero until mid-2015 and thereafter ranged from 200 to 200. In San Jose from mid-2013 to mid-2018, pedestrian stops peaked at over 1500 in October 2013 and generally descreased until mid-2016 when it seemed to stabilize around 500 stops."
+#| fig-cap: "n San Francisco from 2007 to 2014, there were zero pedestrian stops. In Oakland from 2013 to 2018, monthly stops were zero until mid-2015 and thereafter ranged from 200 to 200. In San Jose from mid-2013 to mid-2018, pedestrian stops peaked at over 1500 in October 2013 and generally descreased until mid-2016 when it seemed to stabilize around 500 stops."
+
 ped_stops_over_time |>
   mutate(yr_month = as.Date(str_c(yr_month, "-01"))) |>
   ggplot(aes(x = yr_month, y = ped_stops, color = city)) +
     geom_line(alpha = 0.8) +
-    labs(title = "Pedestrian Traffic Stops in Bay Area Cities Over Time", x = "Year", y = "Traffic Stops")
+    labs(title = "Pedestrian Traffic Stops in Bay Area Cities Over Time", 
+         x = "Year", 
+         y = "Traffic Stops") +
+  theme_minimal()
 ```
 
 The following SQL chunk confirmed my suspicion that San Francisco only documented vehicular stops:
 ```{sql warning=FALSE, message=FALSE}
 #| connection: con_traffic
+
 SELECT DISTINCT type FROM ca_san_francisco_2020_04_01;
 ```
 
 
 To examine what relationship existed between the type of stop and its outcome (arrest, citation, etc.) across cities, I queried and graphed the data for all three cities.
 
-SAN FRANCISCO:
+**San Francisco**
 
 Predictably, the graph for San Francisco was not very interesting because only one type of arrest existed in the data. Citations were by far the most common outcome followed by warnings. Only small numbers of stops ended in arrests, and only a tiny proportion of stops had outcomes that were not documented.
 
@@ -115,13 +126,21 @@ GROUP BY type, outcome;
 ```
 
 ```{r warning=FALSE, message=FALSE}
+#| label: sf_stop_outcomes
+#| fig-alt: "Segmented bar chart showing stops by type and outcome in San Francisco. Among vehicular stops, citations were by far the most common outcome followed by warnings. Only small numbers of stops ended in arrests, and only a tiny proportion of stops had outcomes that were not documented."
+#| fig-cap: "Among vehicular stops in San Francisco, citations were by far the most common outcome followed by warnings. Only small numbers of stops ended in arrests, and only a tiny proportion of stops had outcomes that were not documented."
+
+#Bar graph
 outcomes_by_type |>
   ggplot(aes(x = type, y = count, fill = outcome)) +
       geom_bar(stat = "identity") +
-      labs(title = "Traffic Stops in San Francisco by Type and Outcome, 2007-2016", fill = "Outcome of Stop", x = "Type of Stop")
+      labs(title = "Traffic Stops in San Francisco by Type and Outcome, 2007-2016", 
+           fill = "Outcome of Stop", 
+           x = "Type of Stop") +
+  theme_minimal()
 ```
 
-SAN JOSE:
+**San Jose**
 
 In San Jose, it was quite common for the outcome of a stop to be missing, especially for pedestrian stops, and no "warning" outcome was included. The type of stop was also missing for many observations. Arrests were more common for pedestrian stops as opposed to vehicular ones. Conversely, citations were more common for vehicular stops than for pedestrian ones.
 ```{sql warning=FALSE, message=FALSE}
@@ -135,14 +154,22 @@ GROUP BY type, outcome;
 ```
 
 ```{r warning=FALSE, message=FALSE}
+#| label: sj_stop_outcomes
+#| fig-alt: "Segmented bar chart showing stops by type and outcome in San Jose. In San Jose, most stops were vehicular, among which over half had no documented outcome (61970), many ended in citation (34107), and a very small number ended in arrests (1884). Among pedestrian stops, over 3/4 had no documented outcome (29149), a comparatively higher percentage ended in arrest (3421), and comparatively fewer ended in citation (5056). Among the significant number of stops not categorized as vehicular or pedestrian, 3626 has no outcome, 7058 ended in arrest, and 6563 ended in citation."
+#| fig-cap: "In San Jose, most stops were vehicular, among which over half had no documented outcome, many ended in citation, and a very small number ended in arrests. Among pedestrian stops, over 3/4 had no documented outcome, a comparatively higher percentage ended in arrest, and comparatively fewer ended in citation. A significant number of stops were not categorized as vehicular or pedestrian."
+
+#Bar graph
 outcomes_by_type_sj |>
   ggplot(aes(x = type, y = count, fill = outcome)) +
       geom_bar(stat = "identity") +
       scale_fill_manual(values = c("citation" = "#00BB38", "arrest" = "#F7766D", "NA" = "#7F7F7F")) +
-      labs(title = "Traffic Stops in San Jose by Type and Outcome, 2013-2018", fill = "Outcome of Stop", x = "Type of Stop")
+      labs(title = "Traffic Stops in San Jose by Type and Outcome, 2013-2018", 
+           fill = "Outcome of Stop", 
+           x = "Type of Stop") +
+  theme_minimal()
 ```
 
-OAKLAND:
+**Oakland**
 
 In Oakland, outcomes included a "warning category." Although pedestrian stops were rare, a higher percentage of percentage of pedestrian stops ended in arrest in comparison to vehicular stops. Both warnings and citations were more common for vehicular stops.
 ```{sql warning=FALSE, message=FALSE}
@@ -156,12 +183,22 @@ GROUP BY type, outcome;
 ```
 
 ```{r warning=FALSE, message=FALSE}
+#| label: oakland_stop_outcomes
+#| fig-alt: "Segmented bar chart showing stops by type and outcome in Oakland. In Oakland, most stops were vehicular, among which less than a quarter had no documented outcome (22008), many ended in citations (49410) and warnings (28146), and a small number ended in arrests (6693). Among the small number of pedestrian stops, there were 2855 arrests, 565 citations, 1174 warnings, and 2490 with no documented outcome. Among the significant number of stops not categorized as vehicular or pedestrian, 9609 has no outcome, 6642 ended in arrest, 2451 ended in citation, and 1364 ended in a warning."
+#| fig-cap: "In Oakland, most stops were vehicular, among which less than a quarter had no documented outcome, many ended in citations (49410) and warnings (28146), and a small number ended in arrests (6693). Among the small number of pedestrian stops, there were 2855 arrests, 565 citations, 1174 warnings, and 2490 with no documented outcome. Among the significant number of stops not categorized as vehicular or pedestrian, 9609 has no outcome, 6642 ended in arrest, 2451 ended in citation, and 1364 ended in a warning."
+
+#Bar graph
 outcomes_by_type_oak |>
   ggplot(aes(x = type, y = count, fill = outcome)) +
       geom_bar(stat = "identity") +
-      labs(title = "Traffic Stops in Oakland by Type and Outcome, 2013-2018", fill = "Outcome of Stop", x = "Type of Stop")
+      labs(title = "Traffic Stops in Oakland by Type and Outcome, 2013-2018", 
+           fill = "Outcome of Stop",
+           x = "Type of Stop") +
+  theme_minimal()
 ```
 
-CONCLUSION:
+**Conclusion**
 
-This analysis revealed the inconsistent, and often incomplete, ways that traffic stops have been documented in these three Bay Area cities across time. Pedestrian stops were not documented at all in San Francisco and were only documented after the first two years of available data in Oakland. In both San Jose and Oakland, information on the type and outcome was missing for a high proportion of traffic stops. Nevertheless, preliminary analysis revealed that for both San Jose and Oakland, arrests were more common for pedestrian stops, and citations were more common for vehicular stops. 
+This analysis revealed the inconsistent, and often incomplete, ways that traffic stops have been documented in these three Bay Area cities across time. Pedestrian stops were not documented at all in San Francisco and were only documented after the first two years of available data in Oakland. In both San Jose and Oakland, information on the type and outcome was missing for a high proportion of traffic stops. Nevertheless, preliminary analysis revealed that for both San Jose and Oakland, arrests were more common for pedestrian stops than vehicular ones, and citations were more common for vehicular stops than pedestrian ones. This pattern may exist because the police are more likely to stop cars for small infractions (running stop signs, out-dated registration, broken headlight, etc) and more likely to stop individuals for more serious criminal behavior warranting arrest (violence, drug dealing, etc.).
+
+**Data source:** Pierson, Emma, Camelia Simoiu, Jan Overgoor, Sam Corbett-Davies, Daniel Jenson, Amy Shoemaker, Vignesh Ramachandran, et al. 2020. “A Large-Scale Analysis of Racial Disparities in Police Stops Across the United States.” Nature Human Behaviour, 1–10. [https://pubmed.ncbi.nlm.nih.gov/32367028/](https://pubmed.ncbi.nlm.nih.gov/32367028/).

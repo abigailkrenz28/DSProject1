@@ -10,18 +10,20 @@ website:
         href: index.qmd
       - text: Data Viz
         menu: 
-          - text: Tidy Tuesday 1
+          - text: Inequality across countries
             href: TidyTuesday1.qmd
-          - text: Tidy Tuesday 2
+          - text: Race in obgyn studies
             href: TidyTuesday2.qmd
-          - text: Project 2
+          - text: FLOTUS Tweets
             href: Project2.qmd
-          - text: Project 3
+          - text: Gender Representation in the US Congress
             href: Project3.qmd
-          - text: Project 4
+          - text: Ethical Dilemmas of Risk Assessment Tools
             href: Project4.qmd
-          - text: Project 5
+          - text: Traffic Stops in Bay Area Cities
             href: Project5.qmd
+          - text: Term Presentation
+            href: Presentation.qmd
 
 format:
   html:

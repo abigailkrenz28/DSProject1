@@ -1,31 +1,29 @@
 ---
 title: "Gender Representation in the US Congress"
 description: |
-  A simulation to determine whether the disparity in female representation in the US Congress across the Democratic and Republican Parties is due to chance
+  A permutation test to determine whether the higher female representation in the US Congress across the Democratic and Republican Parties is due to random chance
 author: Abigail Krenz
-date: October 27, 2025
+date: December 6, 2025
 format: 
   html:
     code-fold: true
     code-summary: "Show the code"
 ---
+```{r warning=FALSE, message=FALSE}
+#| label: congress_parties_and_gender
+#| fig-alt: "There are currently 156 female members in the US Congress, out of 538 voting members. The distribution of women across parties is uneven: 113 are part of the Democratic Party, and the other 43 are part of the Republican Party."
+#| fig-cap: "The distribution of women across parties is currently uneven, with 113 in the Democratic Party, and the other 43 in the Republican Party."
 
-Data source: Zachary Kornbluth. 2025. Unitedstates/Congress-Legislators. Python. September 27, Released October 22, 2025. [https://github.com/unitedstates/congress-legislators](https://github.com/unitedstates/congress-legislators).
-
-
-There are currently 151 female members in the US Congress, out of 535 voting members. The distribution of women across parties is uneven: 112 are part of the Democratic Party, and the other 43 are part of the Republican Party. Assuming that women are equally likely to be a part of each party, how likely is it that number of Democratic women is 112 are more? How likely is it that different levels of female representation is related to the party rather than random chance?
-
-To answer these questions, I first wrangled data on the current members of Congress to calculate the numbers of men and women in each of the two main parties. Next, I created a data frame with the same numbers of Democrats, Republicans, women, and men, and then created a function that randomly assigns parties to the men and women in the data frame and then calculates the total number of Democratic women. Finally, I ran this function 5000 times using the map_dbl function and then calculated the number of times that Democratic women exceeded 112 divided by the number of iterations (5000). This figure denotes the probability that the number of Democratic women reached or exceeded 112 when the assignment of women to each party was random.
-
-```{r dataviz1, warning=FALSE, message=FALSE}
 library(reprex)
 set.seed(47)
-
 library(tidyverse)
 library(readr)
+
+#Reads data
 url <- "https://raw.githubusercontent.com/unitedstates/congress-legislators/gh-pages/legislators-current.csv"
 current_legislators <- read_csv(url)
 
+#Adds numbers of men and women in each party
 rep_and_dem_women <- current_legislators |> 
   group_by(party, gender) |>
   summarize(count = n(), .groups = "drop") |>
@@ -33,12 +31,36 @@ rep_and_dem_women <- current_legislators |>
   mutate(proportion_gender_by_party = count/sum(count)) |>
   filter(party == "Democrat" | party == "Republican")
 
-start_data <- data.frame(gender = c(rep("F", 155), rep("M", 381)),
-                         party = c(rep("Democrat", 261), rep("Republican", 275)))
+#Creates segmented bar chart
+ggplot(rep_and_dem_women, aes(x = party, y = count, fill = gender)) +
+      geom_bar(stat = "identity", position = "stack") +
+      labs(title = "Members of the US Congress by Party and Gender",
+           x = "Party",
+           y = "Number of Members",
+           fill = "Gender") +
+      theme_minimal()
+```
 
+There are currently 156 female members in the US Congress, out of 538 members. The distribution of women across parties is uneven: 113 are part of the Democratic Party, and the other 43 are part of the Republican Party. Assuming that women are equally likely to be a part of each party, how likely is it that number of Democratic women is 113 are more? How likely is it that different levels of female representation is related to the party rather than random chance? These questions lead to the following null and alternative hypotheses:
+
+**H~0~: The process that leads to whether a congressperson is female or male has nothing to do with political party. Therefore, the expected proportion of congresspeople who are women would be the same across political parties.**
+
+**H~A~: The process that leads to whether a congressperson is female or male is related to political party. Therefore, the expected proportion of congresswomen would be different across political party.**
+
+To test these hypotheses, I first wrangled data on the current members of Congress to calculate the numbers of men and women in each of the two main parties. Next, I created a data frame with the same numbers of Democrats, Republicans, women, and men, and then created a function that randomly assigned parties to the men and women in the data frame and then calculates the total number of Democratic women. Finally, I ran this function 5000 times using the map_dbl function and then calculated the number of times that Democratic women exceeded 113, divided by the number of iterations (5000). The figure below shows the distribution of the numbers of congresswomen in the Democratic Parity when the assignment of women to each party was random.
+
+```{r warning=FALSE, message=FALSE}
+#| label: "congress_gender_representative_permutation_test"
+#| fig-alt: "Histogram showing the distribution of numbers of Democratic congresswomen when party assignment was random. The distribution is centered at 78, and none of the simulations came close to reaching the current number of 113 women in the Democratic Party."
+#| fig-cap: "The distribution is centered at 78, and none of the simulations reached or exceeped the current number of 113 women in the Democratic Party."
+
+#Creates starting data with current distribution of gender
+start_data <- data.frame(gender = c(rep("F", 156), rep("M", 382)),
+                         party = c(rep("Democrat", 262), rep("Republican", 276)))
+
+#Permutes party identification across male and female members of congress and finds the sum of Democratic women.
 random_female_democrats <- function(rep) {
   start_data |> mutate(perm_party = sample(party)) |>
-    #select(gender, perm_party) |>
     group_by(gender, perm_party) |>
     summarize(count = n(), .groups = "drop") |>
     filter(perm_party == "Democrat", gender == "F") |>
@@ -46,22 +68,38 @@ random_female_democrats <- function(rep) {
     pull()
 }
 
+#Repeats permutation 5000 times, producing data frame with number of democratic women for each repetition.
 num_exper <- 5000
 female_democrats <- map_dbl(1:num_exper, random_female_democrats)
 
-sum(female_democrats >= 112) / num_exper
-
-
+#Plots distribution of random permutations
 female_democrats |>
    data.frame() |>
    ggplot(aes(x = female_democrats)) +
    geom_histogram() +
-   geom_vline(xintercept = 112, color = "red") +
+   geom_vline(xintercept = 113, color = "red") +
    labs(x = "Number of women in Democratic seats in Congress",
         title = "Numbers of Democratic women when party assignments are random",
-        subtitle = "Higher female representation in the Democratic party is unlikely due to random chance.")
+        subtitle = "Higher female representation in the Democratic party is unlikely due to random chance.") +
+  theme_minimal()
 ```
-As you can see from the chart, the actual number of Democratic women in congressional seats far exceeds the number of women in Democratic seats when the assignment of party to women and men is random. As expected, the random distribution of Democratic women centers around 77.5, or half the total women in Congress.
 
-I calculated that when women are randomly assigned to Democratic and Republican seats 5000 times, the probability that 112 or more were in the Democratic Party was 0. This result suggests the higher number of women in the Democratic Party, in comparison to the Republican Party, has something to do with the parties and not random chance. Future research should determine the specific mechanisms facilitating greater female participation in the Democratic Party.
+As expected, the random distribution of Democratic women centers around 78, or half of the total women in Congress. The actual number of Democratic women in congressional seats far exceeds the number of women in Democratic seats when the assignment of party to women and men is random. 
 
+Next, I calculated the p-value, denoting the probability that the number of Democratic congresswomen exceeded 113 if the party assignment of men and women were a random process repeated 5000 times.
+
+```{r warning=FALSE, message=FALSE}
+#| label: "p-value"
+#| fig-alt: "The p-value is zero."
+#| fig-cap: "The p-value is zero."
+
+#Calculates p-value
+data.frame(p_value = sum(female_democrats >= 113) / num_exper)
+```
+
+I calculated that when women are randomly assigned to Democratic and Republican seats 5000 times, the probability that 113 or more were in the Democratic Party was 0. This result means that we can reject the null hypothesis, providing evidence that the higher number of women in the Democratic Party, in comparison to the Republican Party, has something to do with the parties rather than random chance. Future research should determine the specific mechanisms facilitating greater female participation in the Democratic Party.
+
+
+**Data source:** Zachary Kornbluth. 2025. Unitedstates/Congress-Legislators. Python. December 6, Released October 22, 2025. [https://github.com/unitedstates/congress-legislators](https://github.com/unitedstates/congress-legislators).
+
+**Original source:** GovTrack.US. n.d. "List of Representatives and Senators." Accessed December 6, 2025. [https://www.govtrack.us/congress/members/current](https://www.govtrack.us/congress/members/current)

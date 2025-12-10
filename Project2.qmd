@@ -10,77 +10,135 @@ format:
     code-summary: "Show the code"
 ---
 
-Data source: “Archived White House Websites and Social Media.” 2017. Barack Obama Presidential Library. Accessed October 4, 2025. [https://www.obamalibrary.gov/digital-research-room/archived-white-house-websites-and-social-media](https://www.obamalibrary.gov/digital-research-room/archived-white-house-websites-and-social-media).
+The following analysis of Michelle Obama's tweets from 2013 to 2016 addresses three questions: 
 
-I analyzed data on Michelle Obama's tweets from 2013 to 2016 to answer three questions: 1) What were her ten most common hashtags and how many times did she use them? 2) From which ten accounts did she retweet most frequently and how many times did she retweet for each? 3) How did her usage of words central to her policy platform—girls, health, and education—change from year to year?
+1. What were her ten most common hash tags, and how many times did she use them? 
+2. From which ten accounts did she re-tweet most frequently and how many times did she re-tweet for each?
+3. How did her usage of words central to her policy platform—girls, health, and education—change from year to year?
 
-```{r dataviz1, warning=FALSE, message=FALSE}
+To gain a general understanding of the Michelle Obama's tweeting habits while in office, I graphed how much she tweeted over time:
+```{r warning=FALSE, message=FALSE}
+#| label: "michelleobama-tweeing-history"
+#| fig-alt: "Line graph shows Michelle Obama's tweeting volume from 2013 to 2016. Although there was significant month-to-month variation in tweeting volume, the First Lady's tweeting generally increased through to 2015, reached a high of 250 tweets in August 2015, and began to taper off in 2016."
+#| fig-cap: "Although there was significant month-to-month variation in tweeting volume, the First Lady's tweeting generally increased through to 2015, reached a high of 250 tweets in August 2015, and began to taper off in 2016."
+
 library(tidyverse)
 library(lubridate)
 
-FlotusTweets <- read.csv("tweets.csv")
+flotus_tweets <- read.csv("tweets.csv")
 
-FlotusHashtags <- FlotusTweets|>
+flotus_tweets_over_time <- flotus_tweets |>
+  mutate(year_month = floor_date(as_date(timestamp), "month")) |>
+  group_by(year_month) |>
+  summarize(count = n())
+
+ggplot(data = flotus_tweets_over_time, 
+       aes(x = year_month, y = count)) +
+  geom_line(color = "pink", size = 2) +
+  labs(x = "Year", 
+       y = "Number of Tweets", 
+       title = "Michelle Obama's Tweeting History") +
+  theme_minimal()
+
+
+```
+Although there was significant month-to-month variation in tweeting volume, the First Lady's tweeting generally increased through to 2015 and began to taper off in 2016. Data collection ended in October 2016.
+
+To understand what campaigns Michelle Obama was promoting, I scraped the hash tags from her tweets (the word characters following #) and found the ten that were used most extensively.
+
+```{r warning=FALSE, message=FALSE}
+#| label: "michelleobama-top-ten-tweets"
+#| fig-alt: "Bar graph shows Michelle Obama's top 10 tweets. Her most commonly used hashtag was #LetGirlsLearn (397), followed by #ReachHigher (302), #GimmeFive (163), #62MillionGirls (160), and #LetsMove (153)."
+#| fig-cap: "Michelle Obama's most commonly used hashtag was #LetGirlsLearn (397), followed by #ReachHigher (302), #GimmeFive (163), #62MillionGirls (160), and #LetsMove (153)."
+
+#Extracts hash tags
+flotus_hashtags <- flotus_tweets |>
   select(tweet_id, text) |>
   mutate(hashtags = str_extract_all(text, "(?<=#)\\w+"))
 
-HashtagsUnnested <- FlotusHashtags |>
+#Unnests hash tags
+hashtags_unnested <- flotus_hashtags |>
   unnest(hashtags)
 
-HashtagCounts <- HashtagsUnnested |>
+#Counts instances of each hash tag and reports top 10
+hashtag_counts <- hashtags_unnested |>
   count(hashtags, sort = TRUE) |>
   arrange(desc(n)) |>
   head(10) |>
   mutate(hashtags = fct_reorder(hashtags, n))
 
-ggplot(data=HashtagCounts, aes(y=hashtags, x=n, fill=hashtags)) +
+#Bar chart
+ggplot(data=hashtag_counts, 
+       aes(y=hashtags, x=n, fill=hashtags)) +
   scale_fill_manual(values = c(rep("grey", 9), "pink")) +
   geom_col(show.legend = FALSE) + 
-  labs(title = "Michelle Obama's Top 10 Hashtags", y="Hashtag", x="Number of uses")
-
+  labs(title = "Michelle Obama's Top 10 Hashtags", 
+       y="Hashtag", 
+       x="Number of uses") +
+  theme_minimal()
 ```
 As you can see from the graph above, Michelle Obama's most commonly used hashtag was #LetGirlsLearn, followed by #ReachHigher, #GimmeFive, #62MillionGirls, and #LetsMove. Although her use of hashtags likely does not map on perfectly to her priorities, it provides some indication of the social media campaigns she was promoting most actively. 
 
+Next, I extracted her re-tweets by finding the words following @ to understand what accounts she was interacting with and amplifying on Twitter.
+```{r warning=FALSE, message=FALSE}
+#| label: "top-retweets"
+#| fig-alt: "Bar chart reports the top ten accounts Michelle Obama retweeted from. The top accounts were the Let's Move Campaign (102 times), the White House (87 times), the Joining Forces Campaign (64 times), and the Reach Higher Campaign (48 times)."
+#| fig-cap: "The top accounts Obama retweeted were the Let's Move Campaign (102 times), the White House (87 times), the Joining Forces Campaign (64 times), and the Reach Higher Campaign (48 times)."
 
-
-```{r dataviz2, warning=FALSE, message=FALSE}
-FlotusRetweets <- FlotusTweets|>
+#Extracts retweets by identifying words following @
+flotus_retweets <- flotus_tweets|>
   select(tweet_id, timestamp, text) |>
   mutate(retweets = str_extract(text, "(?<=RT @)\\w+")) |>
   filter(!is.na(retweets))
 
-RetweetsUnnested <- FlotusRetweets |>
+#Unnests retweets
+retweets_unnested <- flotus_retweets |>
   unnest(retweets)
 
-RetweetCounts <- RetweetsUnnested |>
+#Counts instances of retweets and reports top 10 most common
+retweet_counts <- retweets_unnested |>
   count(retweets, sort = TRUE) |>
   arrange(desc(n)) |>
   head(10) |>
   mutate(retweets = fct_reorder(retweets, n))
 
-ggplot(data=RetweetCounts, aes(y=retweets, x=n, fill=retweets)) +
+ggplot(data=retweet_counts, aes(y=retweets, x=n, fill=retweets)) +
   scale_fill_manual(values = c(rep("grey", 9), "light blue")) +
   geom_col(show.legend = FALSE) + 
-  labs(title = "Michelle Obama's Top 10 Accounts for Retweets", y="Accounts", x="Number of retweets")
+  labs(title = "Michelle Obama's Top 10 Accounts for Retweets", 
+       y="Accounts", 
+       x="Number of retweets") +
+  theme_minimal()
+
 ```
-Michelle Obama retweeted from a number of accounts, especially the Let's Move Campaign, the White House, the Joining Forces Campaign (an initiative with Jill Biden to support veterans), and the Reach Higher Campaign (for educational access). Clearly, she was promoting a variety of initiatives relevant to her platform as first lady.
+Michelle Obama re-tweeted heavily from a number of accounts, especially the Let's Move Campaign, the White House, the Joining Forces Campaign (an initiative with Jill Biden to support veterans), and the Reach Higher Campaign (for educational access). Clearly, she was promoting a variety of initiatives relevant to her platform as first lady.
 
+Michelle Obama used her platform as First Lady to promote education, health, and opportunities for girls. I wanted to understand how her usage of these terms on Twitter changed over the course of her time in the White House.
+```{r warning=FALSE, message=FALSE}
+#| label: "girl-education-health-tweets"
+#| fig-alt: "Line graph tracks number of Michelle Obama's tweets mentioning girls, education, and health over time. Although her total amount of tweets including these three terms increased from 2013 to 2014 and from 2014 to 2015, her usage of the term 'girl' spiked particularly dramatically in 2015 (184 mentions). She used all three terms less frequently in 2016, when her Twitter usage generally was tapering off."
+#| fig-cap: "Although her total amount of tweets about girls, education, and health increased from 2013 to 2014 and from 2014 to 2015, her usage of the term 'girl' spiked particularly dramatically in 2015 (184 mentions). She used all three terms less frequently in 2016, when her Twitter usage generally was tapering off."
 
-```{r dataviz3, warning=FALSE, message=FALSE}
-FlotusTopics <- FlotusTweets|>
+#Creates three new columns representing whether each of the three terms were mentioned in the tweet
+flotus_topics <- flotus_tweets|>
   select(tweet_id, timestamp, text) |>
   mutate(girls = str_detect(text, "girls*")) |>
   mutate(education = str_detect(text, "education")) |>
   mutate(health = str_detect(text, "health")) |>
   mutate(year = year(timestamp)) |>
-  select(year, girls, education, health) |>
-  group_by(year)|>
-  summarize(across(c(girls, education, health), sum)) |>
-  pivot_longer(-year, names_to="Topics", values_to="mentions")
+  group_by(year, girls, education, health) |>
+  group_by(year) |>
+  summarize(across(c(girls, education, health), sum)) |> #Finds total mentions of each category
+  pivot_longer(-year, names_to="Topics", values_to="mentions") #Pivots longer for ggplot
 
-ggplot(data=FlotusTopics, aes(y=mentions, x=year, color=Topics)) +
+ggplot(data=flotus_topics, 
+       aes(y=mentions, x=year, color=Topics)) +
    geom_line() + 
-   labs(title = "Michelle Obama's Tweets on Girls, Education, and Health over Time", y="Tweets", x="Year")
+   labs(title = "Michelle Obama's Tweets on Girls, Education, and Health over Time", 
+        y="Tweets", 
+        x="Year") +
+  theme_minimal()
 ```
+Although her total amount of tweets including these three terms increased from 2013 to 2014 and from 2014 to 2015, her usage of the term "girl" spiked particularly dramatically in 2015. She used all three terms less frequently in 2016, when her Twitter usage generally was tapering off.
 
-Michelle Obama used her platform as First Lady to promote education, health, and opportunities for girls. I wanted to understand how her usage of these terms on Twitter changed over the course of her time in the White House. Although her total amount of tweets across all three terms increased from 2013 to 2014 and from 2014 to 2015, her usage of the term girl spiked particularly dramatically in 2015. She used all three terms less frequently in 2016. 
+**Data source:** “Archived White House Websites and Social Media.” 2017. Barack Obama Presidential Library. Accessed October 4, 2025. [https://www.obamalibrary.gov/digital-research-room/archived-white-house-websites-and-social-media](https://www.obamalibrary.gov/digital-research-room/archived-white-house-websites-and-social-media).
