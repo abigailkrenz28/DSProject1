@@ -117,7 +117,7 @@ Michelle Obama used her platform as First Lady to promote education, health, and
 ```{r warning=FALSE, message=FALSE}
 #| label: "girl-education-health-tweets"
 #| fig-alt: "Line graph tracks number of Michelle Obama's tweets mentioning girls, education, and health over time. Although her total amount of tweets including these three terms increased from 2013 to 2014 and from 2014 to 2015, her usage of the term 'girl' spiked particularly dramatically in 2015 (184 mentions). She used all three terms less frequently in 2016, when her Twitter usage generally was tapering off."
-#| fig-cap: "Although her total amount of tweets about girls, education, and health increased from 2013 to 2014 and from 2014 to 2015, her usage of the term 'girl' spiked particularly dramatically in 2015 (184 mentions). She used all three terms less frequently in 2016, when her Twitter usage generally was tapering off."
+#| fig-cap: "Tweets on girls, education, and health increased from 2013 to 2014 and from 2014 to 2015, and 'girl' spiked particularly dramatically in 2015 (184 mentions). Usage of all three terms tapered off in 2016."
 
 #Creates three new columns representing whether each of the three terms were mentioned in the tweet
 flotus_topics <- flotus_tweets|>
