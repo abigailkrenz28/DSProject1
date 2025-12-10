@@ -15,7 +15,7 @@ Using a World Bank data set, I visualized the inequality, as measured by the Gin
 ```{r warning=FALSE, message=FALSE}
 #| label: "ginicoefficient-over-time"
 #| fig-alt: "The line graph shows the Gini Coefficient of 52 countries over time. South Africa has experienced the highest levels of inequality, followed by Brazil, although inequality in both countries has decreased over time. Countries with low levels of inequality included Iceland, Finland, and Switzerland."
-#| fig-cap: "Country with the highest inequality by far was South Africa. Those with low inequality included Iceland, Finland, and Switzerland."
+#| fig-cap: "The country with the highest inequality by far was South Africa. Those with low inequality included Iceland, Finland, and Switzerland."
 
 library(tidyverse)
 library(plotly)
@@ -31,7 +31,11 @@ plot <-ggplot(data=income_inequality_processed,
                   color=Entity, 
                   text = paste('Country:', Entity))) +
   geom_line() + 
-  labs(title="Inequality in countries across time", x="Year", y="Gini Coefficient", color="Country", caption = "Hello") + 
+  labs(title="Inequality in countries across time", 
+       x="Year", y="Gini Coefficient", 
+       color="Country", 
+       alt = "The line graph shows the Gini Coefficient of 52 countries over time. South Africa has experienced the highest levels of inequality, followed by Brazil, although inequality in both countries has decreased over time. Countries with low levels of inequality included Iceland, Finland, and Switzerland.",
+       caption = "The country with the highest inequality by far was South Africa. Those with low inequality included Iceland, Finland, and Switzerland.") + 
   theme_minimal()
 
 #Uses ggplotly to add interactive hover labeling
